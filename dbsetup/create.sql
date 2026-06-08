@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS projectstarter;
-CREATE DATABASE projectstarter;
-USE projectstarter;
+DROP DATABASE IF EXISTS totalitea_db;
+CREATE DATABASE totalitea_db;
+USE totalitea_db;
 
 
 
@@ -20,6 +20,13 @@ CREATE TABLE Basket (
 	CONSTRAINT fk_productId FOREIGN KEY (ProductId) REFERENCES Product(Id),
 	CONSTRAINT ck_quantity CHECK (Quantity >= 0)
 );
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL
+);
+
 
 
 INSERT INTO Product (Name, Description, PriceInPence) VALUES ('Copper Pipe 2m', '15mm copper pipe; 2m length',1000);

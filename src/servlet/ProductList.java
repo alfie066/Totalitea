@@ -10,7 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+
 
 import model.Product;
 import util.ProductHandler;
@@ -20,6 +20,7 @@ import util.ProductHandler;
  */
 @WebServlet("/ProductList")
 public class ProductList extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
     /**
