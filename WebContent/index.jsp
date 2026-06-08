@@ -12,6 +12,12 @@
 <body>
 
 	<%@include file="WEB-INF/jsp/navbar.jsp" %>
+
+	<div style="position:absolute; top:60px; right:20px;">
+	    <a href="login.jsp" class="btn btn-primary">Login</a>
+	</div>
+	
+	
     
 
     <!-- Main jumbotron -->
