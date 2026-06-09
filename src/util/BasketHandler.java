@@ -1,53 +1,68 @@
-/**
- * 
- */
 package util;
 
 import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
-
 import model.Product;
 
-/**
- * @author owens
- *
- */
 public class BasketHandler {
-	
-	public static boolean addToBasket(int pid, int qty){
-		
-		// Uh-oh - we have no support for an 'order id' to distinguish between orders. We'll make one up.
-		// This wouldn't work in reality (e.g. if two people use the system)
-		
-		try {
-			CallableStatement cs = DbConnector.getConnection().prepareCall("{call insertItemIntoBasket(?,?,?,?)}");
-			cs.setInt(1,0); // Our fictitious order-Id.
-			cs.setInt(2, pid); // Product id. Hope it's correct.
-			cs.setInt(3,  qty); // How many customer is buying. Hope it's right.
-			cs.registerOutParameter(4, Types.INTEGER);
-			cs.execute();
-			// We don't need the value from the out parameter. Probably.
-			return true;
-		} catch(SQLException sqle){
-			System.out.println(sqle);
-		}
-		return false;
-		
-	}
-	
-	public static ArrayList<Product> getItemsFromBasket() throws SQLException{
-		// Uh-oh - STILL no support for an 'order id' so I can't tell one person's order from another
-		// Better way to do this (than using a raw SQL query)?
-		String query = "SELECT p.id, p.name, p.description, p.priceInPence FROM Basket b"
-				+ "			JOIN Product p ON b.productId = p.id";
-		ResultSet rs = DbConnector.runSqlPrepared(query);
-		return ProductHandler.resultSetToProducts(rs);
-		
-	}
-	
-	
 
+
+    public static int getOrCreateBasket(int userId) throws SQLException {
+        Connection conn = DbConnector.getConnection();
+
+
+        String selectSql = "SELECT Id FROM Basket WHERE UserId = ?";
+        PreparedStatement ps = conn.prepareStatement(selectSql);
+        ps.setInt(1, userId);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return rs.getInt("Id");
+        }
+
+        String insertSql = "INSERT INTO Basket (UserId) VALUES (?)";
+        PreparedStatement insert = conn.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS);
+        insert.setInt(1, userId);
+        insert.executeUpdate();
+
+        ResultSet keys = insert.getGeneratedKeys();
+        if (keys.next()) {
+            return keys.getInt(1);
+        }
+
+        throw new SQLException("Failed to create basket for userId: " + userId);
+    }
+
+
+    public static boolean addToBasket(int basketId, int pid, int qty) {
+        try {
+            CallableStatement cs = DbConnector.getConnection().prepareCall("{call insertItemIntoBasket(?,?,?,?)}");
+            cs.setInt(1, basketId);
+            cs.setInt(2, pid);
+            cs.setInt(3, qty);
+            cs.registerOutParameter(4, Types.INTEGER);
+            cs.execute();
+            return true;
+        } catch (SQLException sqle) {
+            System.out.println(sqle);
+        }
+        return false;
+    }
+
+    public static ArrayList<Product> getItemsFromBasket(int basketId) throws SQLException {
+        String query = "SELECT p.id, p.name, p.description, p.priceInPence "
+                     + "FROM BasketItem b "
+                     + "JOIN Product p ON b.ProductId = p.Id "
+                     + "WHERE b.BasketId = ?";
+
+        PreparedStatement ps = DbConnector.getConnection().prepareStatement(query);
+        ps.setInt(1, basketId);
+        ResultSet rs = ps.executeQuery();
+        return ProductHandler.resultSetToProducts(rs);
+    }
 }
