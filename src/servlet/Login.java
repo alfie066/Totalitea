@@ -12,8 +12,8 @@ import util.UserHandler;
 
 @WebServlet("/Login")
 public class Login extends HttpServlet {
-	
-	private static final long serialVersionUID = 1L;
+    
+    private static final long serialVersionUID = 1L;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
@@ -22,9 +22,11 @@ public class Login extends HttpServlet {
             String email = request.getParameter("email");
             String password = request.getParameter("password");
 
+            // ✅ back to boolean
             if (UserHandler.loginUser(email, password)) {
 
                 request.getSession().setAttribute("user", email);
+
                 response.sendRedirect("index.jsp");
 
             } else {
