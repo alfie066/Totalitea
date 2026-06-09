@@ -32,7 +32,7 @@
                   <th>Name</th>
                   <th>Description</th>
                   <th>Price</th>
-                  <th>Quantity</th>
+                  <th>Quantity (grams)</th>
                   <th></th>
                 </tr>
               </thead>
@@ -48,9 +48,9 @@
                   		<td><%= p.getName() %></td>
                   		<td><%= p.getDescription() %></td>
                   		<td><%= p.getFormattedPrice() %></td>
-                  		<td><form class="form-horizontal"  action="/ProjectStarterCode/AddToBasket" method="get">
-                  			<input type="text" name="qty" value="0" class="col-xs-2"></input>
-                  			<input type="hidden" name="pid" value="<%= p.getId() %>" ><button type="submit" >Purchase</button>
+                  		<td><form class="form-horizontal" action="/ProjectStarterCode/AddToBasket" method="post">
+                  			<input type="number" name="qty" value="1" min="1" class="col-xs-2"></input>
+                  			<input type="hidden" name="pid" value="<%= p.getId() %>" ><button type="submit" >Add to basket</button>
                   			</form>	
                   		</td>	
                 </tr>

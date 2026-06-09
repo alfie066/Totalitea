@@ -1,10 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+
+
 <!DOCTYPE html>
+
+
 <html>
 <head>
     <title>Totalitea Login</title>
 </head>
 <body>
+
+	<%
+	    String msg = (String) session.getAttribute("loginMessage");
+	
+	    if (msg != null) {
+	%>
+	        <p style="color:red;"><%= msg %></p>
+	<%
+	        session.removeAttribute("loginMessage");
+	    }
+	%>
 
     <h2>Login to Totalitea</h2>
 

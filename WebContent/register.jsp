@@ -14,6 +14,9 @@
 
         <label>Password:</label>
         <input type="password" name="password" required><br><br>
+        
+        <label>Address:</label>
+        <input type="address" name="address" required><br><br>
 
         <button type="submit">Sign Up</button>
     </form>
