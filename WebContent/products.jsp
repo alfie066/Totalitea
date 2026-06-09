@@ -48,11 +48,28 @@
                   		<td><%= p.getName() %></td>
                   		<td><%= p.getDescription() %></td>
                   		<td><%= p.getFormattedPrice() %></td>
-                  		<td><form class="form-horizontal" action="/ProjectStarterCode/AddToBasket" method="post">
-                  			<input type="number" name="qty" value="1" min="1" class="col-xs-2"></input>
-                  			<input type="hidden" name="pid" value="<%= p.getId() %>" ><button type="submit" >Add to basket</button>
-                  			</form>	
-                  		</td>	
+                  		<td><form class="form-horizontal" action="/Totalitea/AddToBasket" method="post">
+
+					    <select name="grams" class="col-xs-3">
+					      <option value="100">100g</option>
+					      <option value="200">200g</option>
+					      <option value="300">300g</option>
+					      <option value="500">500g</option>
+					      <option value="1000">1000g</option>
+					    </select>
+					
+					    <!-- Your original quantity -->
+					    <input type="number" name="qty" value="1" min="1" class="col-xs-2">
+					
+					    <!-- Product ID (unchanged) -->
+					    <input type="hidden" name="pid" value="<%= p.getId() %>">
+					
+					    <!-- Button -->
+					    <button type="submit">Add to basket</button>
+					
+					  </form>    
+					</td>
+	
                 </tr>
 <%
 	}

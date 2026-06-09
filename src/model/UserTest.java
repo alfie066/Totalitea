@@ -39,11 +39,4 @@ public class UserTest {
         assertEquals("newpassword", user.getPassword());
     }
     
-    @Test
-    public void testSetAndGetAddress() {
-        User user = new User("test@test.com", "password123", "g");
-
-        user.setPassword("f");
-        assertEquals("f", user.getAddress());
-    }
 }

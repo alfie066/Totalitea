@@ -22,7 +22,7 @@ public class AddToBasket extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // 1. Check user is logged in
+
         HttpSession session = request.getSession();
         String userEmail = (String) session.getAttribute("user");
 
@@ -44,20 +44,22 @@ public class AddToBasket extends HttpServlet {
             return;
         }
 
-        // 2. Validate parameters
         String pidParam = request.getParameter("pid");
         String qtyParam = request.getParameter("qty");
+        String gramsParam = request.getParameter("grams");
+        
 
-        if (pidParam == null || qtyParam == null) {
+        if (pidParam == null || qtyParam == null || gramsParam == null) {
             response.sendRedirect("error.jsp");
             return;
         }
 
-        // 3. Parse safely
-        int pid, qty;
+        int pid, qty, grams;
         try {
             pid = Integer.parseInt(pidParam);
             qty = Integer.parseInt(qtyParam);
+            grams = Integer.parseInt(gramsParam);
+            
         } catch (NumberFormatException e) {
             response.sendRedirect("error.jsp");
             return;
@@ -68,10 +70,10 @@ public class AddToBasket extends HttpServlet {
             return;
         }
 
-        // 4. Get or create basket, then add item
+
         try {
             int basketId = BasketHandler.getOrCreateBasket(userId);
-            if (BasketHandler.addToBasket(basketId, pid, qty)) {
+            if (BasketHandler.addToBasket(basketId, pid, grams, qty)) {
                 response.sendRedirect("basket.jsp");
                 return;
             }
