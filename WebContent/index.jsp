@@ -1,69 +1,81 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
  
 <!DOCTYPE html>
 <html>
 <head>
+<%-- Page Configuration and Bootstrap Stylesheets --%>
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" >
 <link href="css/style.css" rel="stylesheet" >
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Project example</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Totalitea | Premium Tea & Coffee</title>
 </head>
 <body>
 
+	<%-- include navbar --%>
 	<%@include file="WEB-INF/jsp/navbar.jsp" %>
 
-	<div style="position:absolute; top:60px; right:20px;">
-    <% if (session.getAttribute("user") == null) { %>
-        <a href="login.jsp" class="btn btn-primary">Login</a>
-    <% } else { %>
-        <a href="Logout" class="btn btn-danger">Logout</a>
-    <% } %>
-</div>
-	
-	
-    
-
-    <!-- Main jumbotron -->
-     
-    <div class="jumbotron">
-      <div class="container">
-        <h1 class="display-3">Project example</h1>
-        <p>An example of a styled page or two which interacts with a database and utilises a Java model to facilitate this.</p>
-        <p>This DOES NOT claim to be the best way to structure code, nor does it aim to demonstrate all things that will help you (e.g. there's little templating so a change to the structure of one page can require a change to all of them).</p>
-        <p>Think about what's here, what is similar to what you need, and what is missing. Think, too, about what could be improved: what's making your life difficult?</p>
-        <p>Styling: This is (almost) plain Bootstrap. You don't have to use the default colours/layouts; you don't have to use Bootstrap at all.</p>
+    <%-- Main Welcome Banner (Jumbotron) --%>
+    <div class="jumbotron" style="background-color: #f5f2eb; padding: 70px 0; margin-bottom: 40px; border-bottom: 1px solid #e1dbcf;">
+      <div class="container text-center">
+        <h1 style="color: #2c3e2b; font-family: Georgia, serif; font-weight: bold; margin-bottom: 15px; font-size: 52px;">Artisanal Tea & Fresh Beans</h1>
+        <p style="color: #555; max-width: 700px; margin: 0 auto 25px auto; font-size: 18px; line-height: 1.6;">
+          Welcome to Totalitea. Discover our hand-picked selection of organic loose-leaf teas, premium pyramid tea bags, and ethically sourced coffee beans.
+        </p>
+        <%-- Main Shop Blends Call to Action Button --%>
+        <p><a class="btn btn-primary btn-lg" href="ProductList" role="button" style="background-color: #2c3e2b; border: none; padding: 12px 30px;">Explore Our Blends</a></p>
       </div>
     </div>
 
+    <%-- Main Three Column Grid Layout Container --%>
     <div class="container">
-      <!-- Example row of columns -->
       <div class="row">
+        
+        <%-- Premium Tea Bags Category Box --%>
         <div class="col-md-4">
-          <h2>Products</h2>
-          <p>See a list of products. </p>
-          <p><a class="btn btn-secondary" href="products.jsp" role="button">View details &raquo;</a></p>
+          <div style="background: #ffffff; border: 1px solid #e6e6e6; padding: 30px; border-radius: 6px; text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 45px; margin-bottom: 10px;">🍃</div>
+            <h2 style="color: #2c3e2b; font-size: 24px; font-weight: 600; margin-top: 10px; margin-bottom: 15px;">Premium Tea Bags</h2>
+            <p style="color: #666; min-height: 60px; font-size: 14px; line-height: 1.5;">From vibrant organic green teas to comforting breakfast blends, browse our expertly crafted selections.</p>
+            <%-- Shop Teas Action Button --%>
+            <p><a class="btn btn-default" href="products.jsp" role="button" style="border-radius: 4px; width: 100%; font-weight: 500;">Shop Teas &raquo;</a></p>
+          </div>
         </div>
+        
+        <%-- Whole Coffee Beans Category Box --%>
         <div class="col-md-4">
-          <h2>Products - again</h2>
-          <p>See a different list of the same products. </p>
-          <p>Why? What's the difference?</p>
-          <p><a class="btn btn-secondary" href="ProductList" role="button">View details &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
-          <h2>Basket</h2>
-          <p>See what's in the basket.</p>
-          <p><a class="btn btn-secondary" href="basket.jsp" role="button">View details &raquo;</a></p>
+          <div style="background: #ffffff; border: 1px solid #e6e6e6; padding: 30px; border-radius: 6px; text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 45px; margin-bottom: 10px;">☕</div>
+            <h2 style="color: #2c3e2b; font-size: 24px; font-weight: 600; margin-top: 10px; margin-bottom: 15px;">Whole Coffee Beans</h2>
+            <p style="color: #666; min-height: 60px; font-size: 14px; line-height: 1.5;">Freshly roasted single-origin varieties and custom espresso blends. Available in whole bean or tailored grinds.</p>
+            <%-- Shop Coffee Action Button --%>
+            <p><a class="btn btn-default" href="ProductList" role="button" style="border-radius: 4px; width: 100%; font-weight: 500;">Shop Coffee &raquo;</a></p>
+          </div>
         </div>
+        
+        <%-- Shopping Basket Quick View Box --%>
+        <div class="col-md-4">
+          <div style="background: #ffffff; border: 1px solid #e6e6e6; padding: 30px; border-radius: 6px; text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 45px; margin-bottom: 10px;">🛒</div>
+            <h2 style="color: #2c3e2b; font-size: 24px; font-weight: 600; margin-top: 10px; margin-bottom: 15px;">Your Basket</h2>
+            <p style="color: #666; min-height: 60px; font-size: 14px; line-height: 1.5;">Ready to brew? Head over to your shopping basket to review your selected items and check out securely.</p>
+            <%-- View Basket Action Button --%>
+            <p><a class="btn btn-default" href="basket.jsp" role="button" style="border-radius: 4px; width: 100%; font-weight: 500;">View Basket &raquo;</a></p>
+          </div>
+        </div>
+        
       </div>
 
-      <hr>
+      <hr style="border-top: 1px solid #eee; margin: 40px 0;">
 
-      <footer>
-        <p>Something at the bottom of the page</p>
+      <%-- Website Footer Section --%>
+      <footer class="text-center" style="padding-bottom: 30px; color: #888;">
+        <p>&copy; 2026 Totalitea Co. &bull; Sourced Ethically, Brewed Exceptionally.</p>
       </footer>
-    </div> <!-- /container -->
-<script src="https://code.jquery.com/jquery-1.12.4.min.js" type ="text/javascript"> </script >
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" > </script >
+    </div> 
+    
+    <%-- External JavaScript Core Frameworks --%>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" type ="text/javascript"> </script >
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" > </script >
 </body>
 </html>
