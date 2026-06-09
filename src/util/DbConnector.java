@@ -28,7 +28,7 @@ public class DbConnector {
 	 *  Alter the details below to match your own connection details
 	 */
 	
-	private static final String DB_URL = "jdbc:mysql://localhost:3306/totalitea_db"; // NOTE: DB name included!
+	private static final String DB_URL = "jdbc:mysql://localhost:3306/totalitea_db?serverTimezone=UTC"; // NOTE: DB name included!
 	
 	private static final String USER = "teamuser";
 	private static final String PASSWORD = "totalitea1"; // is this the correct password?
