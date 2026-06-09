@@ -12,29 +12,22 @@ CREATE TABLE Product (
 	CONSTRAINT ck_posPrice CHECK (PriceInPence > 0)
 );
 
-CREATE TABLE Basket (
-	Id INT PRIMARY KEY AUTO_INCREMENT,
-	Oid INT NOT NULL,
-	ProductId INT,
-	Quantity INT NOT NULL,
-	CONSTRAINT fk_productId FOREIGN KEY (ProductId) REFERENCES Product(Id),
-	CONSTRAINT ck_quantity CHECK (Quantity >= 0)
-);
 
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE User (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(100) NOT NULL
 );
 
-
-
-INSERT INTO Product (Name, Description, PriceInPence) VALUES ('Copper Pipe 2m', '15mm copper pipe; 2m length',1000);
-INSERT INTO Product (Name, Description, PriceInPence) VALUES ('Steel Pipe 2m','15mm steel pipe; 2m length', 1200);
-INSERT INTO Product (Name, Description, PriceInPence) VALUES ('Short Nails','25mm nails; pack of 200',250);
-INSERT INTO Product (Name, Description, PriceInPence) VALUES ('Long Nails','50mm nails; pack of 75',475);
-INSERT INTO Product (Name, Description, PriceInPence) VALUES ('Glue','Sticky glue',599);
-INSERT INTO Product (Name, Description, PriceInPence) VALUES ('Glue gun','A glue gun',1999);
+CREATE TABLE Basket (
+	Id INT PRIMARY KEY AUTO_INCREMENT,
+	UserId INT NOT NULL,
+	ProductId INT,
+	Quantity INT NOT NULL,
+	CONSTRAINT fk_productId FOREIGN KEY (ProductId) REFERENCES Product(Id),
+	CONSTRAINT fk_userId FOREIGN KEY (UserId) REFERENCES User(Id),
+	CONSTRAINT ck_quantity CHECK (Quantity >= 0)
+);
 
 DELIMITER /
 
@@ -52,7 +45,18 @@ BEGIN
 END;
 /
 
-CALL insertNewProduct("TEST", "DESC", 99, @out)/
+
+CALL insertNewProduct("Espresso", "Strong black coffee", 250, @out);
+CALL insertNewProduct("Americano", "Espresso with hot water", 280, @out);
+CALL insertNewProduct("Latte", "Coffee with steamed milk", 320, @out);
+CALL insertNewProduct("Cappuccino", "Coffee with milk foam", 320, @out);
+CALL insertNewProduct("Flat White", "Smooth coffee with microfoam", 300, @out);
+CALL insertNewProduct("Iced Coffee", "Chilled coffee with ice", 300, @out);
+
+CALL insertNewProduct("English Breakfast Tea", "Classic black tea", 200, @out);
+CALL insertNewProduct("Green Tea", "Light and refreshing tea", 220, @out);
+CALL insertNewProduct("Earl Grey", "Black tea with bergamot", 220, @out);
+CALL insertNewProduct("Iced Tea", "Cold brewed tea with ice", 280, @out);
 
 SELECT @out/
 

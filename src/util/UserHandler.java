@@ -8,7 +8,7 @@ public class UserHandler {
 
         Connection conn = DbConnector.getConnection();
 
-        String query = "SELECT * FROM users WHERE email=? AND password=?";
+        String query = "SELECT * FROM user WHERE email=? AND password=?";
         PreparedStatement ps = conn.prepareStatement(query);
 
         ps.setString(1, email);
@@ -24,7 +24,7 @@ public class UserHandler {
 
         Connection conn = DbConnector.getConnection();
 
-        String query = "INSERT INTO users (email, password) VALUES (?, ?)";
+        String query = "INSERT INTO user (email, password) VALUES (?, ?)";
         PreparedStatement ps = conn.prepareStatement(query);
 
         ps.setString(1, email);

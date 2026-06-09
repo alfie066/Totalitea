@@ -14,8 +14,12 @@
 	<%@include file="WEB-INF/jsp/navbar.jsp" %>
 
 	<div style="position:absolute; top:60px; right:20px;">
-	    <a href="login.jsp" class="btn btn-primary">Login</a>
-	</div>
+    <% if (session.getAttribute("user") == null) { %>
+        <a href="login.jsp" class="btn btn-primary">Login</a>
+    <% } else { %>
+        <a href="Logout" class="btn btn-danger">Logout</a>
+    <% } %>
+</div>
 	
 	
     
