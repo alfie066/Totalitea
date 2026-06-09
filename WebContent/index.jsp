@@ -23,7 +23,7 @@
           Welcome to Totalitea. Discover our hand-picked selection of organic loose-leaf teas, premium pyramid tea bags, and ethically sourced coffee beans.
         </p>
         <%-- Main Shop Blends Call to Action Button --%>
-        <p><a class="btn btn-primary btn-lg" href="ProductList" role="button" style="background-color: #2c3e2b; border: none; padding: 12px 30px;">Explore Our Blends</a></p>
+        <p><a class="btn btn-primary btn-lg" href="products.jsp" role="button" style="background-color: #2c3e2b; border: none; padding: 12px 30px;">Explore Our Blends</a></p>
       </div>
     </div>
 
