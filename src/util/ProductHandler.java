@@ -35,4 +35,12 @@ public class ProductHandler {
 		return products;
 	
 	}
+	
+	public static ArrayList<Product> searchProducts(String searchTerm) throws SQLException {
+		String query = "SELECT * FROM Product WHERE Name LIKE '%" + searchTerm + "%' OR Description LIKE '%" + searchTerm + "%'";
+		ResultSet rs = DbConnector._runSqlQuery(query);
+		return resultSetToProducts(rs);
+	}
 }
+
+

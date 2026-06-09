@@ -18,9 +18,14 @@
             <li><a href="ProductList">Same products</a></li>
             <li><a href="basket.jsp">Basket</a></li>
           </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="What could this be?">
+          
+          <form action="SearchServlet" method="GET" class="navbar-form navbar-right">
+            <div class="form-group">
+              <input type="text" name="query" class="form-control" placeholder="Search products...">
+            </div>
+            <button type="submit" class="btn btn-default">Search</button>
           </form>
+          
         </div>
       </div>
     </nav>
