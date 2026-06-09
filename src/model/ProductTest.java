@@ -64,4 +64,5 @@ public class ProductTest {
         assertTrue(result.contains("2.5"));
         assertTrue(result.contains("Nice tea"));
     }
+    
 }

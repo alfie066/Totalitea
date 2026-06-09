@@ -27,18 +27,19 @@ CREATE TABLE BasketItem (
     Id        INT PRIMARY KEY AUTO_INCREMENT,
     BasketId  INT NOT NULL,
     ProductId INT NOT NULL,
+    Grams	  INT NOT NULL,
     Quantity  INT NOT NULL,
     CONSTRAINT fk_basketItem_basketId  FOREIGN KEY (BasketId)  REFERENCES Basket(Id),
     CONSTRAINT fk_basketItem_productId FOREIGN KEY (ProductId) REFERENCES Product(Id),
     CONSTRAINT ck_basketItem_quantity  CHECK (Quantity >= 1),
-    CONSTRAINT uq_basket_product       UNIQUE (BasketId, ProductId)
+    CONSTRAINT uq_basket_product       UNIQUE (BasketId, ProductId, Grams)
 );
 
-CREATE TABLE `Order` (
+CREATE TABLE Orders (
     Id         INT PRIMARY KEY AUTO_INCREMENT,
     UserId     INT NOT NULL,
     TotalPrice DECIMAL(10,2) NOT NULL,
-    CONSTRAINT fk_order_userId FOREIGN KEY (UserId) REFERENCES User(Id)
+    CONSTRAINT fk_orders_userId FOREIGN KEY (UserId) REFERENCES User(Id)
 );
 
 CREATE TABLE OrderItem (
@@ -47,7 +48,7 @@ CREATE TABLE OrderItem (
     ProductId INT NOT NULL,
     Quantity  INT NOT NULL,
     UnitPrice DECIMAL(10,2) NOT NULL,
-    CONSTRAINT fk_orderItem_orderId   FOREIGN KEY (OrderId)   REFERENCES `Order`(Id),
+    CONSTRAINT fk_orderItem_orderId   FOREIGN KEY (OrderId)   REFERENCES `Orders`(Id),
     CONSTRAINT fk_orderItem_productId FOREIGN KEY (ProductId) REFERENCES Product(Id),
     CONSTRAINT ck_orderItem_quantity  CHECK (Quantity >= 1)
 );
@@ -85,47 +86,74 @@ END;
 /
 
 CREATE PROCEDURE insertItemIntoBasket(
-    IN basketId  INT,
-    IN productId INT,
-    IN qty       INT,
-    OUT keyval   INT
+    IN myBasketId INT,
+    IN myProductId INT,
+    IN myGrams INT,
+    IN myQty INT,
+    OUT myKeyval INT
 )
+
 MODIFIES SQL DATA
 BEGIN
-    IF EXISTS (SELECT 1 FROM BasketItem WHERE BasketId = basketId AND ProductId = productId) THEN
+
+
+    IF EXISTS (
+        SELECT 1 
+        FROM BasketItem 
+        WHERE BasketId = myBasketId 
+          AND ProductId = myProductId 
+          AND Grams = myGrams
+    ) THEN
+
+
         UPDATE BasketItem
-            SET Quantity = Quantity + qty
-        WHERE BasketId = basketId AND ProductId = productId;
-        SET keyval = 0;
+        SET Quantity = Quantity + myQty
+        WHERE BasketId = myBasketId 
+          AND ProductId = myProductId 
+          AND Grams = myGrams;
+
+        SET myKeyval = 0;
+
     ELSE
-        INSERT INTO BasketItem (BasketId, ProductId, Quantity)
-            VALUES (basketId, productId, qty);
-        SELECT last_insert_id() INTO keyval;
+
+        INSERT INTO BasketItem (BasketId, ProductId, Grams, Quantity)
+        VALUES (myBasketId, myProductId, myGrams, myQty);
+
+        SELECT LAST_INSERT_ID() INTO myKeyval;
+
     END IF;
+
 END;
+
 /
 
 CREATE PROCEDURE updateExistingBasketItem(
-    IN basketId       INT,
-    IN productId      INT,
-    IN quantityChange INT
+    IN myBasketId INT,
+    IN myProductId INT,
+    IN myGrams INT,
+    IN myQuantityChange INT
 )
-MODIFIES SQL DATA
 BEGIN
-    UPDATE BasketItem SET
-        Quantity = Quantity + quantityChange
-    WHERE BasketId = basketId AND ProductId = productId;
+    UPDATE BasketItem
+    SET Quantity = Quantity + myQuantityChange
+    WHERE BasketId = myBasketId 
+      AND ProductId = myProductId 
+      AND Grams = myGrams;
+
 END;
 /
 
 CREATE PROCEDURE removeExistingBasketItem(
-    IN basketId  INT,
-    IN productId INT
+    IN myBasketId INT,
+    IN myProductId INT,
+    IN myGrams INT
 )
-MODIFIES SQL DATA
 BEGIN
     DELETE FROM BasketItem
-    WHERE BasketId = basketId AND ProductId = productId;
+    WHERE BasketId = myBasketId 
+      AND ProductId = myProductId 
+      AND Grams = myGrams;
+
 END;
 /
 

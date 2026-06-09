@@ -62,7 +62,7 @@ ArrayList<Product> products = (ArrayList) request.getAttribute("products");
                   		<td><%= p.getName() %></td>
                   		<td><%= p.getDescription() %></td>
                   		<td><%= p.getFormattedPrice() %></td>
-                  		<td><form class="form-horizontal"  action="/ProjectStarterCode/AddToBasket" method="get">
+                  		<td><form class="form-horizontal"  action="/Totalitea/AddToBasket" method="get">
                   			<input type="text" name="qty" value="0" class="col-xs-2"></input>
                   			<input type="hidden" name="pid" value="<%= p.getId() %>" ><button type="submit" >Purchase</button>
                   			</form>	
