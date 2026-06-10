@@ -1,13 +1,12 @@
 package util;
 
 import java.sql.*;
+import model.User;
 
 public class UserHandler {
 
-    public static boolean loginUser(String email, String password) throws SQLException {
-
+    public static User loginUser(String email, String password) throws SQLException {
         Connection conn = DbConnector.getConnection();
-
         String query = "SELECT * FROM user WHERE email=? AND password=?";
         PreparedStatement ps = conn.prepareStatement(query);
 
@@ -16,22 +15,38 @@ public class UserHandler {
 
         ResultSet rs = ps.executeQuery();
 
-        return rs.next();
+        if (rs.next()) {
+            User user = new User(
+                rs.getString("name"),
+                rs.getString("email"),
+                rs.getString("password"),
+                rs.getString("dob"),
+                rs.getString("address"),
+                rs.getString("creditCard"),
+                rs.getString("expiryDate"),
+                rs.getString("cvv")
+            );
+            user.setID(rs.getInt("id"));
+            return user;
+        }
+        return null;
     }
 
-    public static boolean registerUser(String email, String password, String address) throws SQLException {
-
+    public static boolean registerUser(String name, String email, String password, String dob, String address, String creditCard, String expiryDate, String cvv) throws SQLException {
         Connection conn = DbConnector.getConnection();
-
-        String query = "INSERT INTO user (email, password, address) VALUES (?, ?, ?)";
+        String query = "INSERT INTO user (name, email, password, dob, address, creditCard, expiryDate, cvv) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = conn.prepareStatement(query);
 
-        ps.setString(1, email);
-        ps.setString(2, password);
-        ps.setString(3, address);
+        ps.setString(1, name);
+        ps.setString(2, email);
+        ps.setString(3, password);
+        ps.setString(4, dob);
+        ps.setString(5, address);
+        ps.setString(6, creditCard);
+        ps.setString(7, expiryDate);
+        ps.setString(8, cvv);
 
         int result = ps.executeUpdate();
-
         return result > 0;
     }
     

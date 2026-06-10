@@ -11,10 +11,15 @@ CREATE TABLE Product (
 );
 
 CREATE TABLE User (
-    Id       INT AUTO_INCREMENT PRIMARY KEY,
-    Email    VARCHAR(100) NOT NULL UNIQUE,
-    Password VARCHAR(100) NOT NULL,
-    Address  VARCHAR(100) NOT NULL
+    Id          INT AUTO_INCREMENT PRIMARY KEY,
+    Name        VARCHAR(100) NOT NULL,
+    Email       VARCHAR(100) NOT NULL UNIQUE,
+    Password    VARCHAR(100) NOT NULL,
+    DOB         DATE NOT NULL,
+    Address     VARCHAR(100) NOT NULL,
+    CreditCard  VARCHAR(19) NOT NULL,
+    ExpiryDate  VARCHAR(5) NOT NULL,
+    CVV         VARCHAR(4) NOT NULL
 );
 
 CREATE TABLE Basket (

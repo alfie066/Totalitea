@@ -23,8 +23,9 @@ public class AddToBasket extends HttpServlet {
             throws ServletException, IOException {
 
 
-        HttpSession session = request.getSession();
-        String userEmail = (String) session.getAttribute("user");
+    	HttpSession session = request.getSession();
+    	model.User currentUser = (model.User) session.getAttribute("user");
+    	String userEmail = (currentUser != null) ? currentUser.getEmail() : null;
 
         if (userEmail == null) {
             session.setAttribute("loginMessage", "You must be logged in to add items to your basket.");
