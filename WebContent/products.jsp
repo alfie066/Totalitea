@@ -19,62 +19,84 @@
         <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
           <h1>Products</h1>
           <section class="row text-center placeholders">
-            <p>Our products. Displays some of the data to do with our pipes and glues. It's formatted, but not nicely (e.g. look at the prices).</p>
-            <p>Please remember to enter a quantity before you try and purchase something. Perhaps things could work more nicely.
+            <p>Welcome to Totalitea – explore our premium selection of teas and coffees from around the world. Each product is carefully sourced to bring you the best flavour and quality.</p>
+			<p>Select your preferred quantity and weight before adding items to your basket. Whether you're after a smooth morning coffee or a calming evening tea, we’ve got you covered.</p>
           </section>
 
-          <h2>All products</h2>
-          <div class="table-responsive">
+          
+			<%
+			String query = (String) request.getAttribute("query");
+			if (query != null && !query.isEmpty()) {
+			%>
+			    <p>Showing results for: <strong><%= query %></strong></p>
+			<%
+			}
+			%>
+			
+			<h2>All products</h2>
+			<div class="table-responsive">
+
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>Product Id</th>
                   <th>Name</th>
                   <th>Description</th>
                   <th>Price</th>
-                  <th>Quantity (grams)</th>
+                  <th>Size (grams)</th>
+                  <th>Quantity</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
 <%
-// List of Products
-	ArrayList<Product> products = ProductHandler.getProducts();
-	for(Product p : products) {              	
-%>
-                <tr class="prod p<%= p.getId() %>">
-                	
-                  		<td><%= p.getId() %></td>
-                  		<td><%= p.getName() %></td>
-                  		<td><%= p.getDescription() %></td>
-                  		<td><%= p.getFormattedPrice() %></td>
-                  		<td><form class="form-horizontal" action="/Totalitea/AddToBasket" method="post">
+ArrayList<Product> products = (ArrayList<Product>) request.getAttribute("products");
 
-					    <select name="grams" class="col-xs-3">
-					      <option value="100">100g</option>
-					      <option value="200">200g</option>
-					      <option value="300">300g</option>
-					      <option value="500">500g</option>
-					      <option value="1000">1000g</option>
-					    </select>
-					
-					    <!-- Your original quantity -->
-					    <input type="number" name="qty" value="1" min="1" class="col-xs-2">
-					
-					    <!-- Product ID (unchanged) -->
-					    <input type="hidden" name="pid" value="<%= p.getId() %>">
-					
-					    <!-- Button -->
-					    <button type="submit">Add to basket</button>
-					
-					  </form>    
-					</td>
-	
-                </tr>
-<%
-	}
+if (products == null) {
+    products = ProductHandler.getProducts();
+}
+
+for(Product p : products) {
 %>
-       			</tbody>
+<tr class="prod p<%= p.getId() %>">
+
+    <td><%= p.getName() %></td>
+    <td><%= p.getDescription() %></td>
+    <td><%= p.getFormattedPrice() %></td>
+
+    <!-- Put EVERYTHING form-related inside ONE cell -->
+    <td colspan="3">
+
+        <form action="/Totalitea/AddToBasket" method="post" style="margin:0;">
+
+            <select name="grams" class="form-control"
+                    style="display:inline-block; width:auto;">
+                <option value="100">100g</option>
+                <option value="200">200g</option>
+                <option value="300">300g</option>
+                <option value="500">500g</option>
+                <option value="1000">1000g</option>
+            </select>
+
+            <input type="number" name="qty" value="1" min="1"
+                   class="form-control"
+                   style="display:inline-block; width:70px; margin-left:5px;">
+
+            <input type="hidden" name="pid" value="<%= p.getId() %>">
+
+            <button type="submit" class="btn btn-primary btn-sm"
+                    style="display:inline-block; margin-left:5px;">
+                Add to basket
+            </button>
+
+        </form>
+
+    </td>
+
+</tr>
+<%
+}
+%>
+</tbody>
             </table>
           </div>
         </main>
