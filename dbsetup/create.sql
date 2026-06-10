@@ -5,7 +5,7 @@ USE totalitea_db;
 CREATE TABLE Product (
     Id           INT PRIMARY KEY AUTO_INCREMENT,
     Name         VARCHAR(50) NOT NULL,
-    Description  VARCHAR(50) NOT NULL,
+    Description  VARCHAR(1000) NOT NULL,
     PriceInPence INT NOT NULL,
     CONSTRAINT ck_posPrice CHECK (PriceInPence > 0)
 );
@@ -17,9 +17,9 @@ CREATE TABLE User (
     Password    VARCHAR(100) NOT NULL,
     DOB         DATE NOT NULL,
     Address     VARCHAR(100) NOT NULL,
-    CreditCard  VARCHAR(19) NOT NULL,
-    ExpiryDate  VARCHAR(5) NOT NULL,
-    CVV         VARCHAR(4) NOT NULL
+    CreditCard  VARCHAR(19),
+    ExpiryDate  VARCHAR(5),
+    CVV         VARCHAR(4)
 );
 
 CREATE TABLE Basket (
@@ -62,7 +62,7 @@ DELIMITER /
 
 CREATE PROCEDURE insertNewProduct(
     IN name        VARCHAR(50),
-    IN description VARCHAR(50),
+    IN description VARCHAR(1000),
     IN price       INT,
     OUT keyval     INT
 )
@@ -170,15 +170,37 @@ END;
 
 DELIMITER ;
 
-CALL insertNewProduct("Espresso", "Strong black coffee", 250, @out);
-CALL insertNewProduct("Americano", "Espresso with hot water", 280, @out);
-CALL insertNewProduct("Latte", "Coffee with steamed milk", 320, @out);
-CALL insertNewProduct("Cappuccino", "Coffee with milk foam", 320, @out);
-CALL insertNewProduct("Flat White", "Smooth coffee with microfoam", 300, @out);
-CALL insertNewProduct("Iced Coffee", "Chilled coffee with ice", 300, @out);
-CALL insertNewProduct("English Breakfast Tea", "Classic black tea", 200, @out);
-CALL insertNewProduct("Green Tea", "Light and refreshing tea", 220, @out);
-CALL insertNewProduct("Earl Grey", "Black tea with bergamot", 220, @out);
-CALL insertNewProduct("Iced Tea", "Cold brewed tea with ice", 280, @out);
+
+
+-- Trending products (added at top)
+CALL insertNewProduct("Cold Brew", "Slow-brewed coffee. Brew colour: deep dark brown. Recommended 8g per cup. Medium caffeine content (1.5 mg per gram).", 300, @out);
+
+CALL insertNewProduct("Nitro Cold Brew", "Nitrogen-infused smooth coffee. Brew colour: dark brown with creamy foam top. Recommended 8g per cup. High caffeine content (1.9 mg per gram).", 300, @out);
+
+CALL insertNewProduct("Mocha", "Coffee with chocolate flavour. Brew colour: dark brown. Recommended 9g per cup. Medium caffeine content (1.7 mg per gram).", 300, @out);
+
+CALL insertNewProduct("Matcha Latte", "Green tea-based latte. Brew colour: bright green. Recommended 6g per cup. Low caffeine content (0.7 mg per gram).", 250, @out);
+
+
+-- Original products (updated descriptions only)
+CALL insertNewProduct("Espresso", "Strong black coffee. Brew colour: very dark brown (almost black). Recommended 7g per cup. High caffeine content (2.1 mg per gram).", 250, @out);
+
+CALL insertNewProduct("Americano", "Espresso with hot water. Brew colour: dark brown. Recommended 7g per cup. Medium caffeine content (1.5 mg per gram).", 280, @out);
+
+CALL insertNewProduct("Latte", "Coffee with steamed milk. Brew colour: creamy light brown. Recommended 8g per cup. Medium caffeine content (1.6 mg per gram).", 320, @out);
+
+CALL insertNewProduct("Cappuccino", "Coffee with milk foam. Brew colour: medium brown with foam top. Recommended 8g per cup. Medium caffeine content (1.8 mg per gram).", 320, @out);
+
+CALL insertNewProduct("Flat White", "Smooth coffee with microfoam. Brew colour: light brown. Recommended 8g per cup. Medium caffeine content (1.7 mg per gram).", 300, @out);
+
+CALL insertNewProduct("Iced Coffee", "Chilled coffee with ice. Brew colour: dark brown. Recommended 8g per cup. Medium caffeine content (1.5 mg per gram).", 300, @out);
+
+CALL insertNewProduct("English Breakfast Tea", "Classic black tea. Brew colour: golden brown. Caffeine content: 0.45 mg per gram.", 200, @out);
+
+CALL insertNewProduct("Green Tea", "Light and refreshing tea. Brew colour: pale green. Caffeine content: 0.3 mg per gram.", 220, @out);
+
+CALL insertNewProduct("Earl Grey", "Black tea with bergamot. Brew colour: dark brown. Caffeine content: 0.4 mg per gram.", 220, @out);
+
+CALL insertNewProduct("Iced Tea", "Cold brewed tea with ice. Brew colour: light amber. Main use: refreshing and hydration. Naturally caffeine-free.", 280, @out);
 
 SELECT @out;
