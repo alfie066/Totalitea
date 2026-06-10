@@ -22,7 +22,7 @@ public class UserHandler {
                 rs.getString("password"),
                 rs.getString("dob"),
                 rs.getString("address"),
-                rs.getString("creditCard"),
+                rs.getString("cardNumber"),
                 rs.getString("expiryDate"),
                 rs.getString("cvv")
             );
@@ -32,9 +32,9 @@ public class UserHandler {
         return null;
     }
 
-    public static boolean registerUser(String name, String email, String password, String dob, String address, String creditCard, String expiryDate, String cvv) throws SQLException {
+    public static boolean registerUser(String name, String email, String password, String dob, String address, String cardNumber, String expiryDate, String cvv) throws SQLException {
         Connection conn = DbConnector.getConnection();
-        String query = "INSERT INTO user (name, email, password, dob, address, creditCard, expiryDate, cvv) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO user (name, email, password, dob, address, cardNumber, expiryDate, cvv) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = conn.prepareStatement(query);
 
         ps.setString(1, name);
@@ -42,7 +42,7 @@ public class UserHandler {
         ps.setString(3, password);
         ps.setString(4, dob);
         ps.setString(5, address);
-        ps.setString(6, creditCard);
+        ps.setString(6, cardNumber);
         ps.setString(7, expiryDate);
         ps.setString(8, cvv);
 

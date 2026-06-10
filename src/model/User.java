@@ -8,17 +8,17 @@ public class User {
 	private String password;
 	private String dob;
 	private String address;
-	private String creditCard;
+	private String cardNumber;
 	private String expiryDate;
 	private String cvv;
 	
-	public User(String name, String email, String password, String dob, String address, String creditCard, String expiryDate, String cvv) {
+	public User(String name, String email, String password, String dob, String address, String cardNumber, String expiryDate, String cvv) {
 		this.name = name;
 		this.email = email;
 		this.password = password;
 		this.dob = dob;
 		this.address = address;
-		this.creditCard = creditCard;
+		this.cardNumber = cardNumber;
 		this.expiryDate = expiryDate;
 		this.cvv = cvv;
 	}
@@ -71,12 +71,12 @@ public class User {
 		this.address = address;
 	}
 
-	public String getCreditCard() {
-		return creditCard;
+	public String getCardNumber() {
+		return cardNumber;
 	}
 
-	public void setCreditCard(String creditCard) {
-		this.creditCard = creditCard;
+	public void setCardNumber(String cardNumber) {
+		this.cardNumber = cardNumber;
 	}
 
 	public String getExpiryDate() {

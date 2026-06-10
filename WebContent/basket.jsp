@@ -21,7 +21,7 @@ if (session.getAttribute("user") == null) {
 model.User basketUser = (model.User) session.getAttribute("user");
 String userEmail = (basketUser != null) ? basketUser.getEmail() : null;
 int userId = UserHandler.getUserIdByEmail(userEmail);
-int basketId = BasketHandler.getOrCreateBasket(userId);
+
 %>
 
 
@@ -60,13 +60,15 @@ int basketId = BasketHandler.getOrCreateBasket(userId);
 		In your basket is:
 <ul>
 <%
-ArrayList<BasketItem> basketItems = BasketHandler.getItemsFromBasket(basketId);
+ArrayList<BasketItem> basketItems = BasketHandler.getBasketItems(userId);
 double totalCost = 0.0;
 
 for (BasketItem b : basketItems) {
 
-    double itemPrice = b.getPriceInPoundsPer100g();
-    double itemTotal = itemPrice * b.getQuantity();
+	double pricePer100g = b.getPriceInPoundsPer100g();
+	double itemPrice = pricePer100g * (b.getGrams() / 100.0);
+	double itemTotal = itemPrice * b.getQuantity();
+
     totalCost += itemTotal;
 %>
     <li>

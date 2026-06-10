@@ -202,6 +202,13 @@ public class DbConnector {
 			System.exit(1);
 		}
 	}
+	
+	public static CallableStatement getCallableStatement(String sql) throws SQLException {
+	    Connection conn = getConnection();
+	    return conn.prepareCall(sql);
+	}
+	
+	
 		
 	
 }

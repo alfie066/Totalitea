@@ -26,7 +26,7 @@ public class ProcessOrder extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-   
+
             User user = (User) request.getSession().getAttribute("user");
 
             if (user == null) {
@@ -36,31 +36,40 @@ public class ProcessOrder extends HttpServlet {
 
             int userId = UserHandler.getUserIdByEmail(user.getEmail());
 
-    
-            int basketId = BasketHandler.getOrCreateBasket(userId);
-            ArrayList<BasketItem> items = BasketHandler.getItemsFromBasket(basketId);
+
+            String cardNumber = request.getParameter("cardNumber");
+            String expiry = request.getParameter("expiry");
+            String cvv = request.getParameter("cvv");
+
+            java.sql.Connection conn = util.DbConnector.getConnection();
 
 
-            double total = 0;
-            for (BasketItem b : items) {
-                total += b.getTotalPrice();
+            String sqlUser = "UPDATE User SET CardNumber = ?, ExpiryDate = ?, CVV = ? WHERE Id = ?";
+            java.sql.PreparedStatement psUser = conn.prepareStatement(sqlUser);
+
+            psUser.setString(1, cardNumber);
+            psUser.setString(2, expiry);
+            psUser.setString(3, cvv);
+            psUser.setInt(4, userId);
+
+            psUser.executeUpdate();
+
+
+            int orderId = OrderHandler.getOpenOrderId(userId);
+
+            if (orderId == -1) {
+                response.sendRedirect("basket.jsp");
+                return;
             }
 
-            int orderId = OrderHandler.createOrder(userId, total);
+            String sql = "UPDATE Orders SET Status = 'PAID', PlacedAt = CURRENT_TIMESTAMP WHERE Id = ?";
+            java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, orderId);
+            ps.executeUpdate();
 
-
-            for (BasketItem b : items) {
-                OrderHandler.insertOrderItem(orderId, b);
-            }
-
-
-            BasketHandler.clearBasket(basketId);
-
-
-            request.getSession().setAttribute("message", "✅ Payment complete! Your order has been placed.");
+            request.getSession().setAttribute("message", "Payment complete! Your order has been placed.");
 
             response.sendRedirect("basket.jsp");
-            
 
         } catch (SQLException e) {
             e.printStackTrace();
