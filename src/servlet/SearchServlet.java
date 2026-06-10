@@ -26,19 +26,21 @@ public class SearchServlet extends HttpServlet {
         }
         
         try {
-        	
             ArrayList<Product> results = ProductHandler.searchProducts(query);
             
-            // Pass the data over to the JSP page
-            request.setAttribute("searchResults", results);
+            request.setAttribute("products", results);
             request.setAttribute("query", query);
             
-            // Forward the user to the results page
-            request.getRequestDispatcher("/search-results.jsp").forward(request, response);
+            request.getRequestDispatcher("/products.jsp").forward(request, response);
             
         } catch (SQLException e) {
             e.printStackTrace();
             response.sendRedirect("error.jsp");
         }
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        doGet(request, response);
     }
 }

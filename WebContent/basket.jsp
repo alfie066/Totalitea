@@ -40,9 +40,7 @@
         <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
           <h1>Basket</h1>
 
-          <section class="row text-center placeholders">
-            What should be shown here? Has anything been added to your basket?
-          </section>
+
           In your basket is:
           <ul>
           <%
