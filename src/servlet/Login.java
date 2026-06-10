@@ -1,13 +1,13 @@
 package servlet;
 
 import java.io.IOException;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import model.User;
 import util.UserHandler;
 
 @WebServlet("/Login")
@@ -22,10 +22,11 @@ public class Login extends HttpServlet {
             String email = request.getParameter("email");
             String password = request.getParameter("password");
 
-            // ✅ back to boolean
-            if (UserHandler.loginUser(email, password)) {
+            User loggedInUser = UserHandler.loginUser(email, password);
 
-                request.getSession().setAttribute("user", email);
+            if (loggedInUser != null) {
+
+                request.getSession().setAttribute("user", loggedInUser);
 
                 response.sendRedirect("index.jsp");
 
