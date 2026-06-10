@@ -16,7 +16,8 @@ public class ProductHandler {
 		//ResultSet rs = DbConnector.runSqlPrepared(query);
 		
 		/* ... would do the same as calling this stored procedure via a callable statement */
-		ResultSet rs = DbConnector.runSqlCallable("{call readFullProducts()}");
+		String query = "SELECT * FROM Product";
+		ResultSet rs = DbConnector.runSqlPrepared(query);
 		return resultSetToProducts(rs);
 		
 	}
@@ -64,6 +65,33 @@ public class ProductHandler {
 
 	    return resultSetToProducts(rs);
 	}
+	
+	public static int insertProduct(String name, String description, int price) throws SQLException {
+
+	    java.sql.CallableStatement stmt = DbConnector.getCallableStatement("{CALL insertNewProduct(?, ?, ?, ?)}");
+
+	    stmt.setString(1, name);
+	    stmt.setInt(2, price);
+	    stmt.setString(3, description);
+	    stmt.registerOutParameter(4, java.sql.Types.INTEGER);
+
+	    stmt.execute();
+
+	    return stmt.getInt(4);
+	}
+	
+	public static void updateProduct(int id, String name, String description, int price) throws SQLException {
+
+	    java.sql.CallableStatement stmt = DbConnector.getCallableStatement("{CALL updateExistingProduct(?, ?, ?, ?)}");
+
+	    stmt.setString(1, name);
+	    stmt.setString(2, description);
+	    stmt.setInt(3, price);
+	    stmt.setInt(4, id);
+
+	    stmt.execute();
+	}
+
 }
 
 

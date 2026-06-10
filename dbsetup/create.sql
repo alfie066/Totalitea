@@ -3,63 +3,57 @@ CREATE DATABASE totalitea_db;
 USE totalitea_db;
 
 CREATE TABLE Product (
-    Id           INT PRIMARY KEY AUTO_INCREMENT,
-    Name         VARCHAR(50) NOT NULL,
-    Description  VARCHAR(1000) NOT NULL,
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    Name VARCHAR(50) NOT NULL,
+    Description VARCHAR(1000) NOT NULL,
     PriceInPencePer100g INT NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
     CONSTRAINT ck_posPrice CHECK (PriceInPencePer100g > 0)
 );
 
+
 CREATE TABLE User (
-    Id          INT AUTO_INCREMENT PRIMARY KEY,
-    Name        VARCHAR(100) NOT NULL,
-    Email       VARCHAR(100) NOT NULL UNIQUE,
-    Password    VARCHAR(100) NOT NULL,
-    DOB         DATE NOT NULL,
-    Address     VARCHAR(100) NOT NULL,
-    CreditCard  VARCHAR(19),
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    Password VARCHAR(100) NOT NULL,
+    DOB DATE NOT NULL,
+    Address VARCHAR(100) NOT NULL,
+    CardNumber  VARCHAR(19),
     ExpiryDate  VARCHAR(5),
-    CVV         VARCHAR(4)
-);
-
-CREATE TABLE Basket (
-    Id     INT PRIMARY KEY AUTO_INCREMENT,
-    UserId INT NOT NULL,
-    CONSTRAINT fk_basket_userId FOREIGN KEY (UserId) REFERENCES User(Id)
-);
-
-CREATE TABLE BasketItem (
-    Id                 INT PRIMARY KEY AUTO_INCREMENT,
-    BasketId           INT NOT NULL,
-    ProductId          INT NOT NULL,
-    PriceInPencePer100g   INT NOT NULL,
-    Grams              INT NOT NULL,
-    Quantity           INT NOT NULL,
-    CONSTRAINT fk_basketItem_basketId  FOREIGN KEY (BasketId)  REFERENCES Basket(Id),
-    CONSTRAINT fk_basketItem_productId FOREIGN KEY (ProductId) REFERENCES Product(Id),
-    CONSTRAINT ck_basketItem_quantity  CHECK (Quantity >= 1),
-    CONSTRAINT ck_price_positive       CHECK (PriceInPencePer100g > 0),
-    CONSTRAINT uq_basket_product       UNIQUE (BasketId, ProductId, Grams),
-    CONSTRAINT ck_grams CHECK (Grams IN (100, 200, 300, 400, 500, 1000, 2000, 3000, 4000, 5000))
+    CVV         VARCHAR(4),
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
 CREATE TABLE Orders (
-    Id         INT PRIMARY KEY AUTO_INCREMENT,
-    UserId     INT NOT NULL,
-    TotalPrice DECIMAL(10,2) NOT NULL,
-    CONSTRAINT fk_orders_userId FOREIGN KEY (UserId) REFERENCES User(Id)
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    UserId INT NOT NULL,
+    Status VARCHAR(20) DEFAULT 'OPEN',
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PlacedAt TIMESTAMP NULL,
+
+    CONSTRAINT fk_orders_userId FOREIGN KEY (UserId) REFERENCES User(Id),
+    CONSTRAINT ck_status CHECK (Status IN ('OPEN', 'PAID', 'DELIVERED', 'CANCELLED'))
+
 );
 
 CREATE TABLE OrderItem (
-    Id        INT PRIMARY KEY AUTO_INCREMENT,
-    OrderId   INT NOT NULL,
+    Id INT PRIMARY KEY AUTO_INCREMENT,
+    OrderId INT NOT NULL,
     ProductId INT NOT NULL,
-    Quantity  INT NOT NULL,
-    UnitPrice DECIMAL(10,2) NOT NULL,
-    CONSTRAINT fk_orderItem_orderId   FOREIGN KEY (OrderId)   REFERENCES `Orders`(Id),
+    PriceInPencePer100g INT NOT NULL,
+    Grams INT NOT NULL,
+    Quantity INT NOT NULL,
+
+    CONSTRAINT fk_orderItem_orderId FOREIGN KEY (OrderId) REFERENCES Orders(Id),
     CONSTRAINT fk_orderItem_productId FOREIGN KEY (ProductId) REFERENCES Product(Id),
-    CONSTRAINT ck_orderItem_quantity  CHECK (Quantity >= 1)
+
+    CONSTRAINT ck_grams CHECK (Grams IN (100,200,300,400,500,1000,2000,3000,4000,5000)),
+    CONSTRAINT ck_quantity CHECK (Quantity >= 1),
+
+    CONSTRAINT uq_order UNIQUE (OrderId, ProductId, Grams) 
 );
 
 DELIMITER /
@@ -80,7 +74,7 @@ END;
 
 CREATE PROCEDURE updateExistingProduct(
     IN nname  VARCHAR(50),
-    IN ndesc  VARCHAR(50),
+    IN ndesc  VARCHAR(1000),
     IN npricePer100g INT,
     IN keyval INT
 )
@@ -93,60 +87,70 @@ BEGIN
 END;
 /
 
-CREATE PROCEDURE insertItemIntoBasket(
-    IN myBasketId INT,
+CREATE PROCEDURE insertItemIntoOrder(
+    IN myUserId INT,
     IN myProductId INT,
     IN myGrams INT,
     IN myQty INT,
     OUT myKeyval INT
 )
-MODIFIES SQL DATA
 BEGIN
 
+    DECLARE orderId INT;
     DECLARE pricePer100g INT;
-    DECLARE finalPrice INT;
+
+    SELECT Id INTO orderId
+    FROM Orders
+    WHERE UserId = myUserId AND Status = 'OPEN'
+    LIMIT 1;
+
+    IF orderId IS NULL THEN
+        INSERT INTO Orders (UserId, Status)
+        VALUES (myUserId, 'OPEN');
+
+        SET orderId = LAST_INSERT_ID();
+    END IF;
+
 
     SELECT PriceInPencePer100g INTO pricePer100g
     FROM Product
     WHERE Id = myProductId;
 
-    SET finalPrice = (pricePer100g * myGrams) DIV 100;
-
 
     IF EXISTS (
         SELECT 1 
-        FROM BasketItem 
-        WHERE BasketId = myBasketId 
-          AND ProductId = myProductId 
+        FROM OrderItem
+        WHERE OrderId = orderId
+          AND ProductId = myProductId
           AND Grams = myGrams
     ) THEN
 
-        UPDATE BasketItem
+        UPDATE OrderItem
         SET Quantity = Quantity + myQty
-        WHERE BasketId = myBasketId 
-          AND ProductId = myProductId 
+        WHERE OrderId = orderId
+          AND ProductId = myProductId
           AND Grams = myGrams;
 
         SET myKeyval = 0;
 
     ELSE
 
-        INSERT INTO BasketItem (
-            BasketId,
+        INSERT INTO OrderItem (
+            OrderId,
             ProductId,
-            priceInPencePer100g,
+            PriceInPencePer100g,
             Grams,
             Quantity
         )
         VALUES (
-            myBasketId,
+            orderId,
             myProductId,
-            finalPrice,
+            pricePer100g,
             myGrams,
             myQty
         );
 
-        SELECT LAST_INSERT_ID() INTO myKeyval;
+        SET myKeyval = LAST_INSERT_ID();
 
     END IF;
 
@@ -154,41 +158,19 @@ END;
 
 /
 
-CREATE PROCEDURE updateExistingBasketItem(
-    IN myBasketId INT,
-    IN myProductId INT,
-    IN myGrams INT,
-    IN myQuantityChange INT
-)
-BEGIN
-    UPDATE BasketItem
-    SET Quantity = Quantity + myQuantityChange
-    WHERE BasketId = myBasketId 
-      AND ProductId = myProductId 
-      AND Grams = myGrams;
-
-END;
-/
-
-CREATE PROCEDURE removeExistingBasketItem(
-    IN myBasketId INT,
+CREATE PROCEDURE removeOrderItem(
+    IN myOrderId INT,
     IN myProductId INT,
     IN myGrams INT
 )
 BEGIN
-    DELETE FROM BasketItem
-    WHERE BasketId = myBasketId 
-      AND ProductId = myProductId 
+    DELETE FROM OrderItem
+    WHERE OrderId = myOrderId
+      AND ProductId = myProductId
       AND Grams = myGrams;
-
 END;
 /
 
-CREATE PROCEDURE readFullProducts()
-BEGIN
-    SELECT * FROM Product;
-END;
-/
 
 DELIMITER ;
 

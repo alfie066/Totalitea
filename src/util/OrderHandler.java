@@ -1,41 +1,82 @@
 package util;
 
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import model.BasketItem;
+
 
 public class OrderHandler {
 
-    public static int createOrder(int userId, double total) throws SQLException {
-        Connection conn = DbConnector.getConnection();
+    public static int addItemToOrder(int userId, int productId, int grams, int quantity) throws SQLException {
 
-        String sql = "INSERT INTO Orders (UserId, TotalPrice) VALUES (?, ?)";
-        PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+        CallableStatement stmt = DbConnector.getCallableStatement(
+            "{CALL insertItemIntoOrder(?, ?, ?, ?, ?)}"
+        );
 
-        ps.setInt(1, userId);
-        ps.setDouble(2, total);
+        stmt.setInt(1, userId);
+        stmt.setInt(2, productId);
+        stmt.setInt(3, grams);
+        stmt.setInt(4, quantity);
+        stmt.registerOutParameter(5, java.sql.Types.INTEGER);
 
-        ps.executeUpdate();
+        stmt.execute();
 
-        ResultSet rs = ps.getGeneratedKeys();
-        if (rs.next()) {
-            return rs.getInt(1);
-        }
-
-        throw new SQLException("Failed to create order");
+        return stmt.getInt(5);
     }
 
-    public static void insertOrderItem(int orderId, BasketItem b) throws SQLException {
-        Connection conn = DbConnector.getConnection();
 
-        String sql = "INSERT INTO OrderItem (OrderId, ProductId, Quantity, UnitPrice) VALUES (?, ?, ?, ?)";
-        PreparedStatement ps = conn.prepareStatement(sql);
+    /**
+     * Get current OPEN order ID for a user
+     */
+    public static int getOpenOrderId(int userId) throws SQLException {
+
+        String sql = "SELECT Id FROM Orders WHERE UserId = ? AND Status = 'OPEN' LIMIT 1";
+
+        java.sql.Connection conn = DbConnector.getConnection();
+        java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+
+        ps.setInt(1, userId);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return rs.getInt("Id");
+        }
+
+        return -1; // no open order
+    }
+
+
+    /**
+     * Get all items in an order (basket)
+     */
+    public static ResultSet getOrderItems(int orderId) throws SQLException {
+
+        String sql = "SELECT * FROM OrderItem WHERE OrderId = ?";
+
+        java.sql.Connection conn = DbConnector.getConnection();
+        java.sql.PreparedStatement ps = conn.prepareStatement(sql);
 
         ps.setInt(1, orderId);
-        ps.setInt(2, b.getProductId());
-        ps.setInt(3, b.getQuantity());
-        ps.setDouble(4, b.getTotalPrice());
 
-        ps.executeUpdate();
+        return ps.executeQuery();
+    }
+
+
+    /**
+     * Remove item from order
+     */
+    public static void removeItem(int orderId, int productId, int grams) throws SQLException {
+
+        CallableStatement stmt = DbConnector.getCallableStatement(
+            "{CALL removeOrderItem(?, ?, ?)}"
+        );
+
+        stmt.setInt(1, orderId);
+        stmt.setInt(2, productId);
+        stmt.setInt(3, grams);
+
+        stmt.execute();
     }
 }
