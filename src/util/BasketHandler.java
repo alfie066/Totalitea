@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
-import model.Product;
 import model.BasketItem;
 
 public class BasketHandler {
@@ -63,19 +62,32 @@ public class BasketHandler {
     }
 
     public static ArrayList<BasketItem> getItemsFromBasket(int basketId) throws SQLException {
-    	String query =
-    		    "SELECT p.id, p.name, b.Grams, b.Quantity " +
-    		    "FROM BasketItem b " +
-    		    "JOIN Product p ON b.ProductId = p.Id " +
-    		    "WHERE b.BasketId = ?";
+
+        String query =
+            "SELECT b.Id AS basketItemId, " +
+            "p.Id AS productId, " +
+            "p.Name, " +
+            "b.priceInPencePer100g, " +
+            "b.Grams, " +
+            "b.Quantity " +
+            "FROM BasketItem b " +
+            "JOIN Product p ON b.ProductId = p.Id " +
+            "WHERE b.BasketId = ?";
 
         PreparedStatement ps = DbConnector.getConnection().prepareStatement(query);
         ps.setInt(1, basketId);
         ResultSet rs = ps.executeQuery();
+
         ArrayList<BasketItem> items = new ArrayList<>();
 
         while (rs.next()) {
-            items.add(new BasketItem(rs.getInt("id"), rs.getString("name"), rs.getInt("Grams"), rs.getInt("Quantity")
+            items.add(new BasketItem(
+                rs.getInt("basketItemId"),
+                rs.getInt("productId"),
+                rs.getString("Name"),
+                rs.getInt("priceInPencePer100g"),
+                rs.getInt("Grams"),
+                rs.getInt("Quantity")
             ));
         }
 

@@ -28,7 +28,7 @@ public class ProductHandler {
 			Product p = new Product(rs.getInt("Id"),
 						rs.getString("Name"),
 						rs.getString("Description"),
-						rs.getInt("priceInPence")
+						rs.getInt("PriceInPencePer100g")
 					);
 			products.add(p);		
 		}
@@ -36,10 +36,33 @@ public class ProductHandler {
 	
 	}
 	
+	public static String escapeRegex(String input) {
+	    return input.replaceAll("([\\\\.*+?\\[^\\]$(){}=!<>|:-])", "\\\\$1");
+	}
+	
 	public static ArrayList<Product> searchProducts(String searchTerm) throws SQLException {
-		String query = "SELECT * FROM Product WHERE Name LIKE '%" + searchTerm + "%' OR Description LIKE '%" + searchTerm + "%'";
-		ResultSet rs = DbConnector._runSqlQuery(query);
-		return resultSetToProducts(rs);
+
+	    // ✅ handle empty search safely
+	    if (searchTerm == null || searchTerm.trim().isEmpty()) {
+	        return getProducts();
+	    }
+
+	    String sql = "SELECT * FROM Product WHERE Name REGEXP ? OR Description REGEXP ?";
+
+	    java.sql.Connection conn = DbConnector.getConnection();
+	    java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+
+
+	    String cleaned = searchTerm.toLowerCase().replaceAll("[^a-z0-9 ]", "");
+
+	    String regex = "(^|[[:space:]])" + cleaned + "($|[[:space:]])";
+
+	    ps.setString(1, regex);
+	    ps.setString(2, regex);
+
+	    ResultSet rs = ps.executeQuery();
+
+	    return resultSetToProducts(rs);
 	}
 }
 

@@ -44,15 +44,16 @@ public class ProductTest {
     public void testFormattedPrice() {
         Product p = new Product("Tea", "Nice tea", 250);
 
-        assertEquals(2.50, p.getFormattedPrice(), 0.001);
+        assertEquals("£2.50", p.getFormattedPrice());
     }
 
     @Test
     public void testFormattedPriceRounding() {
         Product p = new Product("Tea", "Nice tea", 255);
 
-        assertEquals(2.55, p.getFormattedPrice(), 0.001);
+        assertEquals("£2.55", p.getFormattedPrice());
     }
+    
 
     @Test
     public void testToString() {
