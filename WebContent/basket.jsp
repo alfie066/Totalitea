@@ -46,16 +46,30 @@ int basketId = BasketHandler.getOrCreateBasket(userId);
 
 
 		In your basket is:
-		<ul>
-			<%
-			ArrayList<BasketItem> basketItems = BasketHandler.getItemsFromBasket(basketId);
-			for (BasketItem b : basketItems) {
-			%>
-			<li><%=b.getName() + " (" + b.getGrams() + "g) x " + b.getQuantity()%></li>
-			<%
-			}
-			%>
-		</ul>
+<ul>
+<%
+ArrayList<BasketItem> basketItems = BasketHandler.getItemsFromBasket(basketId);
+double totalCost = 0.0;
+
+for (BasketItem b : basketItems) {
+
+    double itemPrice = b.getPriceInPoundsPer100g();
+    double itemTotal = itemPrice * b.getQuantity();
+    totalCost += itemTotal;
+%>
+    <li>
+        <%= b.getName() %>
+        (<%= b.getGrams() %>g)
+        x <%= b.getQuantity() %>
+        - £<%= String.format("%.2f", itemTotal) %>
+        ( £<%= String.format("%.2f", itemPrice) %> each )
+    </li>
+<%
+}
+%>
+</ul>
+
+<h3>Total: £<%= String.format("%.2f", totalCost) %></h3>
 	</main>
 
 </body>

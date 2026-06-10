@@ -77,15 +77,11 @@ public class Product {
 		this.price = price;
 	}
 	
-	/**
-	 * 
-	 * @return price formatted with two decimal places to represent pounds & pence (or dollars & cents, or...)
-	 */
-	public double getFormattedPrice(){
-		BigDecimal bd = new BigDecimal(price / 100.0);
-	    bd = bd.setScale(2, RoundingMode.HALF_UP);
-	    return bd.doubleValue();
+	public String getFormattedPrice() {
+	    return String.format("£%.2f", price / 100.0);
 	}
+	
+	
 	
 	public String toString(){
 		return name + " " + getFormattedPrice() + "\n" + description;

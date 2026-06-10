@@ -6,8 +6,8 @@ CREATE TABLE Product (
     Id           INT PRIMARY KEY AUTO_INCREMENT,
     Name         VARCHAR(50) NOT NULL,
     Description  VARCHAR(1000) NOT NULL,
-    PriceInPence INT NOT NULL,
-    CONSTRAINT ck_posPrice CHECK (PriceInPence > 0)
+    PriceInPencePer100g INT NOT NULL,
+    CONSTRAINT ck_posPrice CHECK (PriceInPencePer100g > 0)
 );
 
 CREATE TABLE User (
@@ -29,16 +29,20 @@ CREATE TABLE Basket (
 );
 
 CREATE TABLE BasketItem (
-    Id        INT PRIMARY KEY AUTO_INCREMENT,
-    BasketId  INT NOT NULL,
-    ProductId INT NOT NULL,
-    Grams	  INT NOT NULL,
-    Quantity  INT NOT NULL,
+    Id                 INT PRIMARY KEY AUTO_INCREMENT,
+    BasketId           INT NOT NULL,
+    ProductId          INT NOT NULL,
+    PriceInPencePer100g   INT NOT NULL,
+    Grams              INT NOT NULL,
+    Quantity           INT NOT NULL,
     CONSTRAINT fk_basketItem_basketId  FOREIGN KEY (BasketId)  REFERENCES Basket(Id),
     CONSTRAINT fk_basketItem_productId FOREIGN KEY (ProductId) REFERENCES Product(Id),
     CONSTRAINT ck_basketItem_quantity  CHECK (Quantity >= 1),
-    CONSTRAINT uq_basket_product       UNIQUE (BasketId, ProductId, Grams)
+    CONSTRAINT ck_price_positive       CHECK (PriceInPencePer100g > 0),
+    CONSTRAINT uq_basket_product       UNIQUE (BasketId, ProductId, Grams),
+    CONSTRAINT ck_grams CHECK (Grams IN (100, 200, 300, 400, 500, 1000, 2000, 3000, 4000, 5000))
 );
+
 
 CREATE TABLE Orders (
     Id         INT PRIMARY KEY AUTO_INCREMENT,
@@ -62,30 +66,29 @@ DELIMITER /
 
 CREATE PROCEDURE insertNewProduct(
     IN name        VARCHAR(50),
+    IN pricePer100g INT,
     IN description VARCHAR(1000),
-    IN price       INT,
     OUT keyval     INT
 )
-MODIFIES SQL DATA
 BEGIN
-    INSERT INTO Product (Name, Description, PriceInPence)
-        VALUES (name, description, price);
-    SELECT last_insert_id() INTO keyval;
+    INSERT INTO Product (Name, Description, PriceInPencePer100g)
+    VALUES (name, description, pricePer100g);
+
+    SELECT LAST_INSERT_ID() INTO keyval;
 END;
 /
 
 CREATE PROCEDURE updateExistingProduct(
     IN nname  VARCHAR(50),
     IN ndesc  VARCHAR(50),
-    IN nprice INT,
+    IN npricePer100g INT,
     IN keyval INT
 )
-MODIFIES SQL DATA
 BEGIN
-    UPDATE Product SET
-        Name         = nname,
-        Description  = ndesc,
-        PriceInPence = nprice
+    UPDATE Product
+    SET Name = nname,
+        Description = ndesc,
+        PriceInPencePer100g = npricePer100g
     WHERE Id = keyval;
 END;
 /
@@ -97,9 +100,17 @@ CREATE PROCEDURE insertItemIntoBasket(
     IN myQty INT,
     OUT myKeyval INT
 )
-
 MODIFIES SQL DATA
 BEGIN
+
+    DECLARE pricePer100g INT;
+    DECLARE finalPrice INT;
+
+    SELECT PriceInPencePer100g INTO pricePer100g
+    FROM Product
+    WHERE Id = myProductId;
+
+    SET finalPrice = (pricePer100g * myGrams) DIV 100;
 
 
     IF EXISTS (
@@ -109,7 +120,6 @@ BEGIN
           AND ProductId = myProductId 
           AND Grams = myGrams
     ) THEN
-
 
         UPDATE BasketItem
         SET Quantity = Quantity + myQty
@@ -121,8 +131,20 @@ BEGIN
 
     ELSE
 
-        INSERT INTO BasketItem (BasketId, ProductId, Grams, Quantity)
-        VALUES (myBasketId, myProductId, myGrams, myQty);
+        INSERT INTO BasketItem (
+            BasketId,
+            ProductId,
+            priceInPencePer100g,
+            Grams,
+            Quantity
+        )
+        VALUES (
+            myBasketId,
+            myProductId,
+            finalPrice,
+            myGrams,
+            myQty
+        );
 
         SELECT LAST_INSERT_ID() INTO myKeyval;
 
