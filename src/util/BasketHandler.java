@@ -93,4 +93,11 @@ public class BasketHandler {
 
         return items;
     }
+    
+    public static void clearBasket(int basketId) throws SQLException {
+        String sql = "DELETE FROM BasketItem WHERE BasketId = ?";
+        java.sql.PreparedStatement ps = DbConnector.getConnection().prepareStatement(sql);
+        ps.setInt(1, basketId);
+        ps.executeUpdate();
+    }
 }

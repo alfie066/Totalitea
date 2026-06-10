@@ -16,7 +16,7 @@
     <%@include file="WEB-INF/jsp/navbar.jsp" %>
 
 <div class="container-fluid">
-    <main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
+    <main class="col-md-12">
         <h1>Products</h1>
         <section class="row text-center placeholders">
             <p>Welcome to Totalitea – explore our premium selection of teas and coffees from around the world. Each product is carefully sourced to bring you the best flavour and quality.</p>
@@ -63,13 +63,15 @@ for (Product p : products) {
 				
 				    <td colspan="3">
 				
-				        <form action="<%= request.getContextPath() %>/AddToBasket" method="post">
+				        <form action="<%= request.getContextPath() %>/AddToBasket"
+				              method="post"
+				              style="display:flex; gap:8px; align-items:center;">
 				
-				            <!-- product id -->
+
 				            <input type="hidden" name="pid" value="<%= p.getId() %>">
 				
-				            <!-- grams -->
-				            <select name="grams" class="form-control" style="display:inline-block; width:auto;">
+
+				            <select name="grams" class="form-control" style="width:auto;">
 				                <option value="100">100g</option>
 				                <option value="200">200g</option>
 				                <option value="300">300g</option>
@@ -78,14 +80,11 @@ for (Product p : products) {
 				                <option value="1000">1000g</option>
 				            </select>
 				
-				            <!-- quantity -->
+
 				            <input type="number" name="qty" value="1" min="1"
-				                   class="form-control"
-				                   style="display:inline-block; width:70px; margin-left:5px;">
-				
-				            <!-- submit -->
-				            <button type="submit" class="btn btn-primary btn-sm"
-				                    style="margin-left:5px;">
+				                   class="form-control" style="width:70px;">
+
+				            <button type="submit" class="btn btn-primary btn-sm">
 				                Add to basket
 				            </button>
 				

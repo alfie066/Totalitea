@@ -39,6 +39,18 @@ int basketId = BasketHandler.getOrCreateBasket(userId);
 
 
 	<%@include file="WEB-INF/jsp/navbar.jsp"%>
+	
+	<%
+		String msg = (String) session.getAttribute("message");
+		if (msg != null) {
+		%>
+		    <div class="alert alert-success">
+		        <%= msg %>
+		    </div>
+		<%
+		    session.removeAttribute("message");
+		}
+		%>
 
 
 	<main class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 pt-3">
@@ -70,6 +82,20 @@ for (BasketItem b : basketItems) {
 </ul>
 
 <h3>Total: £<%= String.format("%.2f", totalCost) %></h3>
+
+		
+			<%
+			if (basketItems != null && !basketItems.isEmpty()) {
+			%>
+			    <form action="checkout.jsp" method="get">
+			        <button type="submit" class="btn btn-success">
+			            Proceed to Checkout
+			        </button>
+			    </form>
+			<%
+			}
+			%>
+
 	</main>
 
 </body>

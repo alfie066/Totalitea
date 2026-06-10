@@ -76,6 +76,8 @@ public class AddToBasket extends HttpServlet {
             int basketId = BasketHandler.getOrCreateBasket(userId);
             if (BasketHandler.addToBasket(basketId, pid, grams, qty)) {
                 response.sendRedirect("basket.jsp");
+                
+                
                 return;
             }
         } catch (Exception e) {

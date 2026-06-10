@@ -7,7 +7,7 @@ public class UserTest {
 
     @Test
     public void testConstructor() {
-        User user = new User("test@test.com", "password123", "ef");
+        User user = new User("alfie cull", "test@test.com", "password123", "01/01/0001", "ef", null, null, null);
 
         assertEquals("test@test.com", user.getEmail());
         assertEquals("password123", user.getPassword());
@@ -17,7 +17,7 @@ public class UserTest {
 
     @Test
     public void testSetAndGetID() {
-        User user = new User("test@test.com", "password123", "eg");
+        User user = new User("alfie cull", "test@test.com", "password123", "01/01/0001", "ef", null, null, null);
 
         user.setID(1);
         assertEquals(1, user.getID());
@@ -25,7 +25,7 @@ public class UserTest {
 
     @Test
     public void testSetAndGetEmail() {
-        User user = new User("test@test.com", "password123", "f");
+        User user = new User("alfie cull", "test@test.com", "password123", "01/01/0001", "ef", null, null, null);
 
         user.setEmail("new@test.com");
         assertEquals("new@test.com", user.getEmail());
@@ -33,7 +33,7 @@ public class UserTest {
 
     @Test
     public void testSetAndGetPassword() {
-        User user = new User("test@test.com", "password123", "g");
+        User user = new User("alfie cull", "test@test.com", "password123", "01/01/0001", "ef", null, null, null);
 
         user.setPassword("newpassword");
         assertEquals("newpassword", user.getPassword());

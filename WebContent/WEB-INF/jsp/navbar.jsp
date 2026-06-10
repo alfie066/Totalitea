@@ -19,7 +19,7 @@
 			<ul class="nav navbar-nav" style="display: flex; flex-direction: row; margin: 0; padding-left: 0; list-style: none;">
 				<li><a href="index.jsp" style="color: #4a4a4a; font-weight: 500; padding: 10px 15px;">Home</a></li>
 				<li><a href="products.jsp" style="color: #4a4a4a; font-weight: 500; padding: 10px 15px;">Products</a></li>
-				<li><a href="ProductList" style="color: #4a4a4a; font-weight: 500; padding: 10px 15px;">Same products</a></li>
+				<li><a href="products.jsp" style="color: #4a4a4a; font-weight: 500; padding: 10px 15px;">Buy again</a></li>
 				<li><a href="basket.jsp" style="color: #4a4a4a; font-weight: 500; padding: 10px 15px;">Basket</a></li>
 			</ul>
 

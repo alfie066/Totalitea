@@ -38,7 +38,9 @@
             <h2 style="color: #2c3e2b; font-size: 24px; font-weight: 600; margin-top: 10px; margin-bottom: 15px;">Premium Tea Bags</h2>
             <p style="color: #666; min-height: 60px; font-size: 14px; line-height: 1.5;">From vibrant organic green teas to comforting breakfast blends, browse our expertly crafted selections.</p>
             <%-- Shop Teas Action Button --%>
-            <p><a class="btn btn-default" href="products.jsp" role="button" style="border-radius: 4px; width: 100%; font-weight: 500;">Shop Teas &raquo;</a></p>
+            <p><a class="btn btn-default" href="<%= request.getContextPath() %>/SearchServlet?query=tea" role="button" style="border-radius: 4px; width: 100%; font-weight: 500;">
+			    Shop Teas »
+			</a></p>
           </div>
         </div>
         
@@ -49,7 +51,9 @@
             <h2 style="color: #2c3e2b; font-size: 24px; font-weight: 600; margin-top: 10px; margin-bottom: 15px;">Whole Coffee Beans</h2>
             <p style="color: #666; min-height: 60px; font-size: 14px; line-height: 1.5;">Freshly roasted single-origin varieties and custom espresso blends. Available in whole bean or tailored grinds.</p>
             <%-- Shop Coffee Action Button --%>
-            <p><a class="btn btn-default" href="ProductList" role="button" style="border-radius: 4px; width: 100%; font-weight: 500;">Shop Coffee &raquo;</a></p>
+            <p><a class="btn btn-default" href="<%= request.getContextPath() %>/SearchServlet?query=coffee" role="button" style="border-radius: 4px; width: 100%; font-weight: 500;">
+			    Shop Coffee »
+			</a></p>
           </div>
         </div>
         
