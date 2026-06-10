@@ -54,30 +54,7 @@
                                 style="border-radius: 4px; border: 1px solid #ccc; height: 38px; box-shadow: none;">
                         </div>
 
-                        <h4 style="color: #2c3e2b; font-family: Georgia, serif; font-weight: bold; border-bottom: 1px solid #eae6df; padding-bottom: 8px; margin-top: 30px; margin-bottom: 15px;">Payment Details</h4>
-
-                        <div class="form-group">
-                            <label style="color: #4a4a4a; font-weight: 500; font-size: 13px;">Card Number</label>
-                            <input type="text" name="creditCard" class="form-control" required placeholder="1234 5678 1234 5678" maxlength="19"
-                                style="border-radius: 4px; border: 1px solid #ccc; height: 38px; box-shadow: none;">
-                        </div>
-
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <div class="form-group">
-                                    <label style="color: #4a4a4a; font-weight: 500; font-size: 13px;">Expiry Date</label>
-                                    <input type="text" name="expiryDate" class="form-control" required placeholder="MM/YY" maxlength="5"
-                                        style="border-radius: 4px; border: 1px solid #ccc; height: 38px; box-shadow: none;">
-                                </div>
-                            </div>
-                            <div class="col-xs-6">
-                                <div class="form-group">
-                                    <label style="color: #4a4a4a; font-weight: 500; font-size: 13px;">CVV</label>
-                                    <input type="text" name="cvv" class="form-control" required placeholder="123" maxlength="4"
-                                        style="border-radius: 4px; border: 1px solid #ccc; height: 38px; box-shadow: none;">
-                                </div>
-                            </div>
-                        </div>
+                    	
 
                         <button type="submit" class="btn btn-block" 
                             style="background-color: #2c3e2b; color: #ffffff; font-weight: 500; border-radius: 4px; padding: 12px; font-size: 15px; border: none; margin-top: 25px;">
