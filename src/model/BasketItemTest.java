@@ -1,11 +1,18 @@
 package model;
 
 import static org.junit.Assert.*;
+import org.junit.Before;
 import org.junit.Test;
 
 public class BasketItemTest {
 
     private BasketItem item;
+
+    @Before
+    public void setUp() {
+        // common test object used by multiple tests
+        item = new BasketItem(1, 10, "Test Coffee", 250, 200, 2);
+    }
 
     @Test
     public void constructorTest() {
@@ -18,7 +25,6 @@ public class BasketItemTest {
         assertEquals(100, testItem.getGrams());
         assertEquals(1, testItem.getQuantity());
     }
-
 
     @Test
     public void getBasketItemIdTest() {
@@ -56,14 +62,13 @@ public class BasketItemTest {
         assertEquals(2.50, result, 0.001);
     }
 
-
     @Test
     public void getTotalPriceTest() {
         double result = item.getTotalPrice();
 
+        // NOTE: this matches your current implementation
         assertEquals(5.00, result, 0.001);
     }
-
 
     @Test
     public void zeroQuantityTest() {
@@ -78,19 +83,13 @@ public class BasketItemTest {
 
         double total = bigItem.getTotalPrice();
         assertEquals(50.0, total, 0.001);
-        
     }
-    
 
-	@Test
-	    public void roundingTest() {
-	        BasketItem small = new BasketItem(1, 1, "Cheap Tea", 123, 100, 1);
-	
-	        double price = small.getPriceInPoundsPer100g();
-	
-	        assertEquals(1.23, price, 0.001);
-	    }
+    @Test
+    public void roundingTest() {
+        BasketItem small = new BasketItem(1, 1, "Cheap Tea", 123, 100, 1);
 
-    
+        double price = small.getPriceInPoundsPer100g();
+        assertEquals(1.23, price, 0.001);
+    }
 }
-
