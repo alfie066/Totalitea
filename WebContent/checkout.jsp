@@ -78,15 +78,19 @@
                         <div class="col-xs-6">
                             <div class="form-group">
                                 <label style="color: #4a4a4a; font-weight: 500;">Expiry Date</label>
-                                <input type="text" name="expiry" class="form-control" 
-                                       placeholder="MM/YY" required style="height: 40px;">
+                                <input type="month" name="expiry" class="form-control"
+       							required style="height: 40px;">
                             </div>
                         </div>
                         <div class="col-xs-6">
                             <div class="form-group">
                                 <label style="color: #4a4a4a; font-weight: 500;">CVV</label>
-                                <input type="password" name="cvv" class="form-control" 
-                                       placeholder="•••" required style="height: 40px;">
+                                <input type="password" name="cvv" class="form-control"
+							       maxlength="4"
+							       pattern="[0-9]{3,4}"
+							       inputmode="numeric"
+							       required
+							       style="height: 40px;">
                             </div>
                         </div>
                     </div>
