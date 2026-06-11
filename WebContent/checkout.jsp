@@ -64,7 +64,7 @@
                     
                     <div class="form-group">
                         <label style="color: #4a4a4a; font-weight: 500;">Name on Card</label>
-                        <input type="text" name="cardName" class="form-control" 
+                        <input type="text" name="nameOnCard" class="form-control" 
                                placeholder="e.g. Bob Smith" required style="height: 40px;">
                     </div>
 

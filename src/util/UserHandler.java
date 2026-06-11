@@ -31,16 +31,14 @@ public class UserHandler {
         ResultSet rs = ps.executeQuery();
 
         if (rs.next()) {
-            User user = new User(
-                rs.getString("name"),
-                rs.getString("email"),
-                rs.getString("password"),
-                rs.getString("dob"),
-                rs.getString("address"),
-                rs.getString("cardNumber"),
-                rs.getString("expiryDate"),
-                rs.getString("cvv")
-            );
+        	User user = new User(
+        		    rs.getString("name"),
+        		    rs.getString("email"),
+        		    rs.getString("password"),
+        		    rs.getString("dob"),
+        		    rs.getString("address")
+        		);
+        		
             user.setID(rs.getInt("id"));
             return user;
         }
@@ -53,9 +51,7 @@ public class UserHandler {
      * @param password    the user's password
      * @param dob         the user's date of birth
      * @param address     the user's address
-     * @param cardNumber  the user's card number
-     * @param expiryDate  the card expiry date
-     * @param cvv         the card CVV
+
      * @return            true if the user was successfully registered
      *
      * This method inserts a new user into the database with the
@@ -63,9 +59,12 @@ public class UserHandler {
      */
 
 
-    public static boolean registerUser(String name, String email, String password, String dob, String address, String cardNumber, String expiryDate, String cvv) throws SQLException {
+    public static boolean registerUser(String name, String email, String password, String dob, String address) throws SQLException {
+
         Connection conn = DbConnector.getConnection();
-        String query = "INSERT INTO user (name, email, password, dob, address, cardNumber, expiryDate, cvv) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        String query = "INSERT INTO user (name, email, password, dob, address) VALUES (?, ?, ?, ?, ?)";
+
         PreparedStatement ps = conn.prepareStatement(query);
 
         ps.setString(1, name);
@@ -73,14 +72,11 @@ public class UserHandler {
         ps.setString(3, password);
         ps.setString(4, dob);
         ps.setString(5, address);
-        ps.setString(6, cardNumber);
-        ps.setString(7, expiryDate);
-        ps.setString(8, cvv);
 
         int result = ps.executeUpdate();
         return result > 0;
     }
     
-    
+       
     
 }

@@ -2,32 +2,32 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-
-import model.BasketItem;
 import model.User;
-import util.BasketHandler;
 import util.OrderHandler;
-import util.UserHandler;
+import util.PaymentHandler;
 
 @WebServlet("/ProcessOrder")
 public class ProcessOrder extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         try {
 
-            User user = (User) request.getSession().getAttribute("user");
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
+
 
             if (user == null) {
                 response.sendRedirect("login.jsp");
@@ -36,25 +36,12 @@ public class ProcessOrder extends HttpServlet {
 
             int userId = user.getID();
 
-
-
+            String nameOnCard = request.getParameter("nameOnCard");
             String cardNumber = request.getParameter("cardNumber");
             String expiryRaw = request.getParameter("expiry");
-            String expiry = expiryRaw + "-01";
             String cvv = request.getParameter("cvv");
 
-            java.sql.Connection conn = util.DbConnector.getConnection();
-
-
-            String sqlUser = "UPDATE User SET CardNumber = ?, ExpiryDate = ?, CVV = ? WHERE Id = ?";
-            java.sql.PreparedStatement psUser = conn.prepareStatement(sqlUser);
-
-            psUser.setString(1, cardNumber);
-            psUser.setString(2, expiry);
-            psUser.setString(3, cvv);
-            psUser.setInt(4, userId);
-
-            psUser.executeUpdate();
+            String expiry = expiryRaw + "-01";
 
 
             int orderId = OrderHandler.getOpenOrderId(userId);
@@ -64,9 +51,14 @@ public class ProcessOrder extends HttpServlet {
                 return;
             }
 
+  
+            PaymentHandler.insertPayment(orderId, nameOnCard, cardNumber, expiry, cvv);
+
+
             OrderHandler.completeOrder(orderId);
 
-            request.getSession().setAttribute("message", "Payment complete! Your order has been placed.");
+
+            session.setAttribute("message", "Payment complete! Your order has been placed.");
 
             response.sendRedirect("basket.jsp");
 

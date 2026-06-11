@@ -20,9 +20,6 @@ CREATE TABLE User (
     Password VARCHAR(100) NOT NULL,
     DOB DATE NOT NULL,
     Address VARCHAR(100) NOT NULL,
-    CardNumber  VARCHAR(19),
-    ExpiryDate  DATE, 
-    CVV         VARCHAR(10),
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -54,6 +51,19 @@ CREATE TABLE OrderItem (
     CONSTRAINT ck_quantity CHECK (Quantity >= 1),
 
     CONSTRAINT uq_order UNIQUE (OrderId, ProductId, Grams) 
+);
+
+CREATE TABLE Payment (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    OrderId INT NOT NULL,
+    NameOnCard VARCHAR(50),
+    CardNumber VARCHAR(19),
+    ExpiryDate DATE,
+    CVV VARCHAR(10),
+
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_payment_order FOREIGN KEY (OrderId) REFERENCES Orders(Id)
 );
 
 DELIMITER /
