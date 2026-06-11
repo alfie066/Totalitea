@@ -4,6 +4,7 @@
 <%@ page import="util.BasketHandler"%>
 <%@ page import="model.BasketItem"%>
 <%@ page import="util.UserHandler"%>
+<%@ page import="model.User"%>
 
 <%
 if (session.getAttribute("user") == null) {
@@ -14,7 +15,8 @@ if (session.getAttribute("user") == null) {
 
 model.User basketUser = (model.User) session.getAttribute("user");
 String userEmail = (basketUser != null) ? basketUser.getEmail() : null;
-int userId = UserHandler.getUserIdByEmail(userEmail);
+User user = (User) request.getSession().getAttribute("user");
+int userId = user.getID();
 %>
 
 <!doctype html>

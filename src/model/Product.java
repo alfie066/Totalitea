@@ -1,7 +1,5 @@
 package model;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 public class Product {
 	private int id; // id=0 means no id set (a new, unsaved, product)

@@ -6,8 +6,23 @@ import java.sql.SQLException;
 
 
 
+/*
+ * This class handles all operations related to orders.
+ * It is responsible for creating orders, adding and removing items,
+ * retrieving order data, and completing an order when a user checks out.
+ */
 public class OrderHandler {
-
+	
+	/*
+	 * @param userId     the user adding the item
+	 * @param productId  the product being added
+	 * @param grams      the selected weight of the item
+	 * @param quantity   how many of the item to add
+	 * @return           the ID of the inserted order item
+	 *
+	 * This method calls a stored procedure to add an item to the user's current order.
+	 * If the item already exists in the order, the quantity is updated instead.
+	 */
     public static int addItemToOrder(int userId, int productId, int grams, int quantity) throws SQLException {
 
         CallableStatement stmt = DbConnector.getCallableStatement(
@@ -26,8 +41,12 @@ public class OrderHandler {
     }
 
 
-    /**
-     * Get current OPEN order ID for a user
+    /*
+     * @param userId  the user whose order is being checked
+     * @return        the ID of the current OPEN order, or -1 if none exists
+     *
+     * This method retrieves the user's current open order.
+     * It is used to determine which basket/order items should be added to.
      */
     public static int getOpenOrderId(int userId) throws SQLException {
 
@@ -48,8 +67,12 @@ public class OrderHandler {
     }
 
 
-    /**
-     * Get all items in an order (basket)
+    /*
+     * @param orderId  the order to retrieve items from
+     * @return         a ResultSet containing all order items
+     *
+     * This method gets all items that belong to a specific order.
+     * It is mainly used when displaying the contents of a basket.
      */
     public static ResultSet getOrderItems(int orderId) throws SQLException {
 
@@ -64,9 +87,15 @@ public class OrderHandler {
     }
 
 
-    /**
-     * Remove item from order
+    /*
+     * @param orderId   the order the item belongs to
+     * @param productId the product to remove
+     * @param grams     the weight of the item to remove
+     *
+     * This method removes a specific item from an order
+     * by calling a stored procedure in the database.
      */
+
     public static void removeItem(int orderId, int productId, int grams) throws SQLException {
 
         CallableStatement stmt = DbConnector.getCallableStatement(
@@ -79,6 +108,13 @@ public class OrderHandler {
 
         stmt.execute();
     }
+    
+    /*
+     * @param orderID
+     * @returns nothing (void)
+     * 
+     * this method sets the status of an order from open to paid whenever a user checks out the basket
+     */
     
     public static void completeOrder(int orderId) throws SQLException {
 

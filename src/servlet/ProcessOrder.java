@@ -34,7 +34,8 @@ public class ProcessOrder extends HttpServlet {
                 return;
             }
 
-            int userId = UserHandler.getUserIdByEmail(user.getEmail());
+            int userId = user.getID();
+
 
 
             String cardNumber = request.getParameter("cardNumber");
