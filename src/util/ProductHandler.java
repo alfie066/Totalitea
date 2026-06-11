@@ -11,11 +11,6 @@ public class ProductHandler {
 	
 	public static ArrayList<Product> getProducts() throws SQLException {
 		
-		/* The below, run as a prepared statement */
-		//String query = "SELECT * FROM Product";
-		//ResultSet rs = DbConnector.runSqlPrepared(query);
-		
-		/* ... would do the same as calling this stored procedure via a callable statement */
 		String query = "SELECT * FROM Product";
 		ResultSet rs = DbConnector.runSqlPrepared(query);
 		return resultSetToProducts(rs);
@@ -37,34 +32,34 @@ public class ProductHandler {
 	
 	}
 	
-	public static String escapeRegex(String input) {
-	    return input.replaceAll("([\\\\.*+?\\[^\\]$(){}=!<>|:-])", "\\\\$1");
-	}
 	
 	public static ArrayList<Product> searchProducts(String searchTerm) throws SQLException {
 
-	    // ✅ handle empty search safely
+
 	    if (searchTerm == null || searchTerm.trim().isEmpty()) {
 	        return getProducts();
 	    }
 
-	    String sql = "SELECT * FROM Product WHERE Name REGEXP ? OR Description REGEXP ?";
+	    String sql = "SELECT * FROM Product " +
+	                 "WHERE LOWER(Name) LIKE ? OR LOWER(Description) LIKE ?";
 
 	    java.sql.Connection conn = DbConnector.getConnection();
 	    java.sql.PreparedStatement ps = conn.prepareStatement(sql);
 
 
-	    String cleaned = searchTerm.toLowerCase().replaceAll("[^a-z0-9 ]", "");
+	    String cleaned = searchTerm.trim().toLowerCase();
 
-	    String regex = "(^|[[:space:]])" + cleaned + "($|[[:space:]])";
 
-	    ps.setString(1, regex);
-	    ps.setString(2, regex);
+	    String likePattern = "%" + cleaned + "%";
+
+	    ps.setString(1, likePattern);
+	    ps.setString(2, likePattern);
 
 	    ResultSet rs = ps.executeQuery();
 
 	    return resultSetToProducts(rs);
 	}
+	
 	
 	public static int insertProduct(String name, String description, int price) throws SQLException {
 

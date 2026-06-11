@@ -21,7 +21,7 @@ CREATE TABLE User (
     DOB DATE NOT NULL,
     Address VARCHAR(100) NOT NULL,
     CardNumber  VARCHAR(19),
-    ExpiryDate  VARCHAR(10), 
+    ExpiryDate  DATE, 
     CVV         VARCHAR(10),
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
