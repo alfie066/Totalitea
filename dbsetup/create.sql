@@ -21,8 +21,8 @@ CREATE TABLE User (
     DOB DATE NOT NULL,
     Address VARCHAR(100) NOT NULL,
     CardNumber  VARCHAR(19),
-    ExpiryDate  VARCHAR(5),
-    CVV         VARCHAR(4),
+    ExpiryDate  VARCHAR(10), 
+    CVV         VARCHAR(10), --should be 5
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -95,15 +95,28 @@ CREATE PROCEDURE insertItemIntoOrder(
     OUT myKeyval INT
 )
 BEGIN
-
     DECLARE orderId INT;
     DECLARE pricePer100g INT;
 
+    -- Step 1: Get latest OPEN order
     SELECT Id INTO orderId
     FROM Orders
-    WHERE UserId = myUserId AND Status = 'OPEN'
+    WHERE UserId = myUserId
+      AND Status = 'OPEN'
+    ORDER BY CreatedAt DESC
     LIMIT 1;
 
+    -- Step 2: HARD re-check (this is the critical fix)
+    IF orderId IS NOT NULL THEN
+        IF NOT EXISTS (
+            SELECT 1 FROM Orders 
+            WHERE Id = orderId AND Status = 'OPEN'
+        ) THEN
+            SET orderId = NULL;
+        END IF;
+    END IF;
+
+    -- Step 3: Create new order if needed
     IF orderId IS NULL THEN
         INSERT INTO Orders (UserId, Status)
         VALUES (myUserId, 'OPEN');
@@ -111,48 +124,30 @@ BEGIN
         SET orderId = LAST_INSERT_ID();
     END IF;
 
-
+    -- Step 4: Get price
     SELECT PriceInPencePer100g INTO pricePer100g
     FROM Product
     WHERE Id = myProductId;
 
+    -- Step 5: Atomic insert/update (NO EXISTS anymore)
+    INSERT INTO OrderItem (
+        OrderId,
+        ProductId,
+        PriceInPencePer100g,
+        Grams,
+        Quantity
+    )
+    VALUES (
+        orderId,
+        myProductId,
+        pricePer100g,
+        myGrams,
+        myQty
+    )
+    ON DUPLICATE KEY UPDATE
+        Quantity = Quantity + myQty;
 
-    IF EXISTS (
-        SELECT 1 
-        FROM OrderItem
-        WHERE OrderId = orderId
-          AND ProductId = myProductId
-          AND Grams = myGrams
-    ) THEN
-
-        UPDATE OrderItem
-        SET Quantity = Quantity + myQty
-        WHERE OrderId = orderId
-          AND ProductId = myProductId
-          AND Grams = myGrams;
-
-        SET myKeyval = 0;
-
-    ELSE
-
-        INSERT INTO OrderItem (
-            OrderId,
-            ProductId,
-            PriceInPencePer100g,
-            Grams,
-            Quantity
-        )
-        VALUES (
-            orderId,
-            myProductId,
-            pricePer100g,
-            myGrams,
-            myQty
-        );
-
-        SET myKeyval = LAST_INSERT_ID();
-
-    END IF;
+    SET myKeyval = LAST_INSERT_ID();
 
 END;
 

@@ -5,7 +5,7 @@
 %>
 
 <nav class="navbar navbar-default navbar-fixed-top"
-...
+
 	style="background-color: #ffffff; border-bottom: 1px solid #eae6df; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02); padding: 5px 0;">
 	<div class="container-fluid" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: nowrap;">
 		
@@ -19,7 +19,7 @@
 			<ul class="nav navbar-nav" style="display: flex; flex-direction: row; margin: 0; padding-left: 0; list-style: none;">
 				<li><a href="index.jsp" style="color: #4a4a4a; font-weight: 500; padding: 10px 15px;">Home</a></li>
 				<li><a href="products.jsp" style="color: #4a4a4a; font-weight: 500; padding: 10px 15px;">Products</a></li>
-				<li><a href="products.jsp" style="color: #4a4a4a; font-weight: 500; padding: 10px 15px;">Buy again</a></li>
+				<li><a href="buyAgain.jsp" style="color: #4a4a4a; font-weight: 500; padding: 10px 15px;">Buy again</a></li>
 				<li><a href="basket.jsp" style="color: #4a4a4a; font-weight: 500; padding: 10px 15px;">Basket</a></li>
 			</ul>
 

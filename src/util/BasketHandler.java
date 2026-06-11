@@ -13,6 +13,18 @@ public class BasketHandler {
 
         OrderHandler.addItemToOrder(userId, productId, grams, quantity);
     }
+    
+    public static void removeFromBasket(int itemId) {
+        try {
+            String sql = "DELETE FROM OrderItem WHERE Id = ?";
+            PreparedStatement stmt = DbConnector.getConnection().prepareStatement(sql);
+            stmt.setInt(1, itemId);
+            stmt.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public static ArrayList<BasketItem> getBasketItems(int userId) throws SQLException {
@@ -51,26 +63,4 @@ public class BasketHandler {
         return items;
     }
 
-
-    public static void removeFromBasket(int userId, int productId, int grams) throws SQLException {
-
-        int orderId = OrderHandler.getOpenOrderId(userId);
-
-        if (orderId != -1) {
-            OrderHandler.removeItem(orderId, productId, grams);
-        }
-    }
-
-
-    public static void clearBasket(int userId) throws SQLException {
-
-        int orderId = OrderHandler.getOpenOrderId(userId);
-
-        if (orderId == -1) return;
-
-        String sql = "DELETE FROM OrderItem WHERE OrderId = ?";
-        PreparedStatement ps = DbConnector.getConnection().prepareStatement(sql);
-        ps.setInt(1, orderId);
-        ps.executeUpdate();
-    }
 }

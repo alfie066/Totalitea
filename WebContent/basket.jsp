@@ -71,13 +71,20 @@ for (BasketItem b : basketItems) {
 
     totalCost += itemTotal;
 %>
-    <li>
-        <%= b.getName() %>
-        (<%= b.getGrams() %>g)
-        x <%= b.getQuantity() %>
-        - £<%= String.format("%.2f", itemTotal) %>
-        ( £<%= String.format("%.2f", itemPrice) %> each )
-    </li>
+<li>
+    <%= b.getName() %>
+    (<%= b.getGrams() %>g)
+    x <%= b.getQuantity() %>
+    - £<%= String.format("%.2f", itemTotal) %>
+    ( £<%= String.format("%.2f", itemPrice) %> each )
+
+    <form action="RemoveFromBasket" method="post" style="display:inline;">
+        <input type="hidden" name="itemId" value="<%= b.getBasketItemId() %>">
+        <button type="submit" class="btn btn-danger btn-sm">
+            Remove
+        </button>
+    </form>
+</li>
 <%
 }
 %>

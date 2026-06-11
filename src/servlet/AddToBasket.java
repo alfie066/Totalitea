@@ -61,6 +61,13 @@ public class AddToBasket extends HttpServlet {
             qty = Integer.parseInt(qtyParam);
             grams = Integer.parseInt(gramsParam);
             
+
+            System.out.println("User ID: " + userId);
+            System.out.println("Product ID: " + pid);
+            System.out.println("Grams: " + grams);
+            System.out.println("Quantity: " + qty);
+
+            
         } catch (NumberFormatException e) {
             response.sendRedirect("error.jsp");
             return;
