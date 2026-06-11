@@ -38,7 +38,8 @@ public class ProcessOrder extends HttpServlet {
 
 
             String cardNumber = request.getParameter("cardNumber");
-            String expiry = request.getParameter("expiry");
+            String expiryRaw = request.getParameter("expiry");
+            String expiry = expiryRaw + "-01";
             String cvv = request.getParameter("cvv");
 
             java.sql.Connection conn = util.DbConnector.getConnection();
@@ -62,10 +63,7 @@ public class ProcessOrder extends HttpServlet {
                 return;
             }
 
-            String sql = "UPDATE Orders SET Status = 'PAID', PlacedAt = CURRENT_TIMESTAMP WHERE Id = ?";
-            java.sql.PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, orderId);
-            ps.executeUpdate();
+            OrderHandler.completeOrder(orderId);
 
             request.getSession().setAttribute("message", "Payment complete! Your order has been placed.");
 

@@ -61,7 +61,18 @@ int userId = UserHandler.getUserIdByEmail(userEmail);
 <ul>
 <%
 ArrayList<BasketItem> basketItems = BasketHandler.getBasketItems(userId);
-double totalCost = 0.0;
+
+double subtotal = BasketHandler.calculateSubtotal(basketItems);
+
+int totalWeight = BasketHandler.calculateTotalWeight(basketItems);
+double weightKg = totalWeight / 1000.0;
+
+
+double shipping = BasketHandler.calculateShipping(totalWeight, subtotal);
+
+
+double total = subtotal + shipping;
+
 
 for (BasketItem b : basketItems) {
 
@@ -69,7 +80,6 @@ for (BasketItem b : basketItems) {
 	double itemPrice = pricePer100g * (b.getGrams() / 100.0);
 	double itemTotal = itemPrice * b.getQuantity();
 
-    totalCost += itemTotal;
 %>
 <li>
     <%= b.getName() %>
@@ -90,7 +100,37 @@ for (BasketItem b : basketItems) {
 %>
 </ul>
 
-<h3>Total: £<%= String.format("%.2f", totalCost) %></h3>
+<%
+if (subtotal < 100 && subtotal > 0) {
+    double remaining = 100 - subtotal;
+%>
+    <p style="color: #2c3e2b;">
+        Spend £<%= String.format("%.2f", remaining) %> more for FREE delivery!
+    </p>
+<%
+}
+%>
+
+<div style="margin-top: 20px; font-size: 18px;">
+
+    <p>Subtotal: £<%= String.format("%.2f", subtotal) %></p>
+
+    <p>
+        Shipping:
+        <% if (shipping == 0 && subtotal >= 100) { %>
+            <span style="color: green;">FREE</span>
+        <% } else { %>
+            £<%= String.format("%.2f", shipping) %>
+        <% } %>
+    </p>
+
+    <hr>
+
+    <p><strong>Total: £<%= String.format("%.2f", total) %></strong></p>
+    <p>Total weight: <%= String.format("%.2f", weightKg) %> kg</p>
+
+
+</div>
 
 		
 			<%

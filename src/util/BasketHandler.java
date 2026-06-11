@@ -62,5 +62,51 @@ public class BasketHandler {
 
         return items;
     }
+    
+    public static int calculateTotalWeight(ArrayList<BasketItem> items) {
+        int totalWeight = 0;
+
+        for (BasketItem item : items) {
+            totalWeight += item.getGrams() * item.getQuantity();
+        }
+
+        return totalWeight;
+    }
+    
+    public static double calculateShipping(int totalWeight, double subtotal) {
+
+        if (subtotal >= 100) {
+            return 0;
+        }
+
+        if (totalWeight == 0) return 0;
+
+        double weightKg = totalWeight / 1000.0;
+
+        if (weightKg <= 5) {
+            return 1.0;
+        } else if (weightKg <= 10) {
+            return 10.0;
+        } else {
+            return 15.0;
+        }
+    }
+    
+    public static double calculateSubtotal(ArrayList<BasketItem> items) {
+
+        double subtotal = 0;
+
+        for (BasketItem item : items) {
+            double pricePer100g = item.getPriceInPencePer100g() / 100.0;
+            double gramsFactor = item.getGrams() / 100.0;
+
+            subtotal += pricePer100g * gramsFactor * item.getQuantity();
+        }
+
+        return subtotal;
+    }
+    
+
+    
 
 }
