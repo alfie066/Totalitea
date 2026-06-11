@@ -22,7 +22,7 @@ CREATE TABLE User (
     Address VARCHAR(100) NOT NULL,
     CardNumber  VARCHAR(19),
     ExpiryDate  VARCHAR(10), 
-    CVV         VARCHAR(10), --should be 5
+    CVV         VARCHAR(10),
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
