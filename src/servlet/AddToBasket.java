@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.User;
 import util.BasketHandler;
 import util.UserHandler;
 
@@ -24,26 +25,17 @@ public class AddToBasket extends HttpServlet {
 
 
     	HttpSession session = request.getSession();
-    	model.User currentUser = (model.User) session.getAttribute("user");
-    	String userEmail = (currentUser != null) ? currentUser.getEmail() : null;
+    	User user = (User) session.getAttribute("user");
 
-        if (userEmail == null) {
-            session.setAttribute("loginMessage", "You must be logged in to add items to your basket.");
-            response.sendRedirect("login.jsp");
-            return;
-        }
+    	if (user == null) {
+    	    session.setAttribute("loginMessage", "You must be logged in to add items to your basket.");
+    	    response.sendRedirect("login.jsp");
+    	    return;
+    	}
+    	
 
-        int userId = 0;
-		try {
-			userId = UserHandler.getUserIdByEmail(userEmail);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        if (userId == -1) {
-            response.sendRedirect("error.jsp");
-            return;
-        }
+    	int userId = user.getID();
+
 
         String pidParam = request.getParameter("pid");
         String qtyParam = request.getParameter("qty");
