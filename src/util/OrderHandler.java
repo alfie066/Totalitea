@@ -79,4 +79,15 @@ public class OrderHandler {
 
         stmt.execute();
     }
+    
+    public static void completeOrder(int orderId) throws SQLException {
+
+        String sql = "UPDATE Orders SET Status = 'PAID', PlacedAt = CURRENT_TIMESTAMP WHERE Id = ?";
+
+        java.sql.Connection conn = DbConnector.getConnection();
+        java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+
+        ps.setInt(1, orderId);
+        ps.executeUpdate();
+    }
 }

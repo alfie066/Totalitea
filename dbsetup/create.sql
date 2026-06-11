@@ -170,33 +170,32 @@ END;
 DELIMITER ;
 
 
-CALL insertNewProduct("Cold Brew", 300, "Slow-brewed coffee. Brew colour: deep dark brown. Recommended 8g per cup. Medium caffeine content (1.5 mg per gram).",  @out);
+CALL insertNewProduct("Cold Brew", 180, "Slow-brewed coffee. Brew colour: deep dark brown. Recommended 8g per cup. Medium caffeine content (1.5 mg per gram).",  @out);
 
-CALL insertNewProduct("Nitro Cold Brew", 300, "Nitrogen-infused smooth coffee. Brew colour: dark brown with creamy foam top. Recommended 8g per cup. High caffeine content (1.9 mg per gram).", @out);
+CALL insertNewProduct("Nitro Cold Brew", 200, "Nitrogen-infused smooth coffee. Brew colour: dark brown with creamy foam top. Recommended 8g per cup. High caffeine content (1.9 mg per gram).", @out);
 
-CALL insertNewProduct("Mocha", 300, "Coffee with chocolate flavour. Brew colour: dark brown. Recommended 9g per cup. Medium caffeine content (1.7 mg per gram).", @out);
+CALL insertNewProduct("Mocha", 190, "Coffee with chocolate flavour. Brew colour: dark brown. Recommended 9g per cup. Medium caffeine content (1.7 mg per gram).", @out);
 
-CALL insertNewProduct("Matcha Latte", 250, "Green tea-based latte. Brew colour: bright green. Recommended 6g per cup. Low caffeine content (0.7 mg per gram).", @out);
+CALL insertNewProduct("Matcha Latte", 170, "Green tea-based latte. Brew colour: bright green. Recommended 6g per cup. Low caffeine content (0.7 mg per gram).", @out);
 
 
-CALL insertNewProduct("Espresso", 250, "Strong black coffee. Brew colour: very dark brown (almost black). Recommended 7g per cup. High caffeine content (2.1 mg per gram).", @out);
+CALL insertNewProduct("Espresso", 170, "Strong black coffee. Brew colour: very dark brown (almost black). Recommended 7g per cup. High caffeine content (2.1 mg per gram).", @out);
 
-CALL insertNewProduct("Americano", 280, "Espresso with hot water. Brew colour: dark brown. Recommended 7g per cup. Medium caffeine content (1.5 mg per gram).", @out);
+CALL insertNewProduct("Americano", 180, "Espresso with hot water. Brew colour: dark brown. Recommended 7g per cup. Medium caffeine content (1.5 mg per gram).", @out);
 
-CALL insertNewProduct("Latte", 320, "Coffee with steamed milk. Brew colour: creamy light brown. Recommended 8g per cup. Medium caffeine content (1.6 mg per gram).", @out);
+CALL insertNewProduct("Latte", 220, "Coffee with steamed milk. Brew colour: creamy light brown. Recommended 8g per cup. Medium caffeine content (1.6 mg per gram).", @out);
 
-CALL insertNewProduct("Cappuccino", 320, "Coffee with milk foam. Brew colour: medium brown with foam top. Recommended 8g per cup. Medium caffeine content (1.8 mg per gram).", @out);
+CALL insertNewProduct("Cappuccino", 220, "Coffee with milk foam. Brew colour: medium brown with foam top. Recommended 8g per cup. Medium caffeine content (1.8 mg per gram).", @out);
 
-CALL insertNewProduct("Flat White", 300, "Smooth coffee with microfoam. Brew colour: light brown. Recommended 8g per cup. Medium caffeine content (1.7 mg per gram).", @out);
+CALL insertNewProduct("Flat White", 190, "Smooth coffee with microfoam. Brew colour: light brown. Recommended 8g per cup. Medium caffeine content (1.7 mg per gram).", @out);
 
-CALL insertNewProduct("Iced Coffee", 300, "Chilled coffee with ice. Brew colour: dark brown. Recommended 8g per cup. Medium caffeine content (1.5 mg per gram).", @out);
+CALL insertNewProduct("Iced Coffee", 190, "Chilled coffee with ice. Brew colour: dark brown. Recommended 8g per cup. Medium caffeine content (1.5 mg per gram).", @out);
 
-CALL insertNewProduct("English Breakfast Tea", 200, "Classic black tea. Brew colour: golden brown. Caffeine content: 0.45 mg per gram.", @out);
+CALL insertNewProduct("English Breakfast Tea", 120, "Classic black tea. Brew colour: golden brown. Caffeine content: 0.45 mg per gram.", @out);
 
-CALL insertNewProduct("Green Tea", 220, "Light and refreshing tea. Brew colour: pale green. Caffeine content: 0.3 mg per gram.", @out);
+CALL insertNewProduct("Green Tea", 130, "Light and refreshing tea. Brew colour: pale green. Caffeine content: 0.3 mg per gram.", @out);
 
-CALL insertNewProduct("Earl Grey", 220, "Black tea with bergamot. Brew colour: dark brown. Caffeine content: 0.4 mg per gram.", @out);
+CALL insertNewProduct("Earl Grey", 130, "Black tea with bergamot. Brew colour: dark brown. Caffeine content: 0.4 mg per gram.", @out);
 
-CALL insertNewProduct("Iced Tea", 280, "Cold brewed tea with ice. Brew colour: light amber. Main use: refreshing and hydration. Naturally caffeine-free.", @out);
-
+CALL insertNewProduct("Iced Tea", 150, "Cold brewed tea with ice. Brew colour: light amber. Main use: refreshing and hydration. Naturally caffeine-free.", @out);
 SELECT @out;
