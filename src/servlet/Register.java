@@ -24,11 +24,8 @@ public class Register extends HttpServlet {
             String password = request.getParameter("password");
             String dob = request.getParameter("dob");
             String address = request.getParameter("address");
-            String cardNumber = request.getParameter("cardNumber");
-            String expiryDate = request.getParameter("expiryDate");
-            String cvv = request.getParameter("cvv");
 
-            if (UserHandler.registerUser(name, email, password, dob, address, cardNumber, expiryDate, cvv)) {
+            if (UserHandler.registerUser(name, email, password, dob, address)) {
                 response.sendRedirect("login.jsp");
             } else {
                 response.sendRedirect("error.jsp");
